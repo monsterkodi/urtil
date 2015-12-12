@@ -1,0 +1,40 @@
+{
+  "name": "urtil",
+  "description": "makes url tiles",
+  "repository": {
+    "url": "github.com/monsterkodi/urtil"
+  },
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "monsterkodi",
+  "license": "Unlicense",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "del": "^2.2.0",
+    "jade": "^1.11.0",
+    "lodash": "^3.10.1",
+    "mkpath": "^1.0.0",
+    "nomnom": "^1.8.1",
+    "noon": "^0.1.6",
+    "opn": "^3.0.3",
+    "progress2": "^0.1.1",
+    "q": "^1.4.1",
+    "stylus": "^0.52.4",
+    "webshot": "^0.16.0"
+  },
+  "devDependencies": {
+    "copy": "^0.1.3",
+    "del": "^2.1.0",
+    "gulp": "^3.9.0",
+    "gulp-bump": "^1.0.0",
+    "gulp-coffee": "^2.3.1",
+    "gulp-debug": "^2.1.2",
+    "gulp-pepper": "^0.9.5",
+    "gulp-plumber": "^1.0.1",
+    "gulp-run": "^1.6.11",
+    "gulp-salt": "^0.1.4",
+    "gulp-template": "^3.1.0",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5"
+  }
+}
