@@ -174,8 +174,14 @@ buildPage = ->
 
 load = (u) ->
     
-    r = url.parse u
-    r = url.parse("http://#{u}") unless r.hostname?
+    if u.indexOf('.') == -1
+        us = "file://#{resolve path.join outdir, u + '.html'}" 
+    else if not u.startsWith 'http'
+        us = "https://#{u}" 
+    else 
+        us = u
+     
+    r = url.parse us
     f = path.join r.hostname + (r.path != '/' and r.path.replace(/\//g, '.') or '') + '.png'
 
     map[u] = 
@@ -204,10 +210,11 @@ load = (u) ->
                 height: 'window'
             defaultWhiteBackground: true
             
-        webshot u, f, o, (e) ->
+        webshot us, f, o, (e) ->
             bar.tick 1
             if e  
                 map[u].status = chalk.red 'failed'
+                log e
                 d.reject new Error e
             else
                 map[u].status = chalk.green 'ok'
