@@ -20,9 +20,9 @@ err      = () ->
     log chalk.bold.red [].slice.call(arguments).join ' '
     process.exit()
 
-defaultTileWidth = 300
-defaultTileHeight = 200
-defaultScreenHeight = 1000
+defaultTileWidth = 240
+defaultTileHeight = 160
+defaultScreenHeight = 930
 
 has = (ol, kv) -> 
     return false if not ol?
@@ -56,9 +56,10 @@ args = nomnom
       tileSize:   { abbr: 'S', help: 'shortcut to set tile width and height (square tiles)'}
       timeout:    { abbr: 't', default: 60, help: 'maximal page retrieval time in seconds'}
       view:       { abbr: 'v', default: true, toggle: true, help: 'open generated page'}
-      refresh:    { abbr: 'r',  help: 'force refresh of all tiles', flag: true}
-      norefresh:  { abbr: 'n',  help: 'disable refresh of all tiles', flag: true}
-      version:    { abbr: 'V',  help: 'output version', flag: true, hidden: true }
+      quiet:      { abbr: 'q', flag: true, help: 'less verbose console output'}
+      refresh:    { abbr: 'r', flag: true, help: 'force refresh of all tiles'}
+      norefresh:  { abbr: 'n', flag: true, help: 'disable refresh of all tiles'}
+      version:    { abbr: 'V', flag: true, help: 'output version', hidden: true }
    .help chalk.blue("config file format:\n") + """
     \   <url>
     \       width    <w>
@@ -127,7 +128,7 @@ mkpath.sync img
 bar = new progress ":bar :current"+chalk.gray("/#{_.size urls}"),
     complete: chalk.bold.blue '█'
     incomplete: chalk.gray '█'
-    width: 50
+    width: 48
     total: _.size urls
 bar.tick 0
 
@@ -244,7 +245,9 @@ Q.timeout p, args.timeout * 1000
             if 'ok' != chalk.stripColor i.status
                 if fs.existsSync c
                     fs.renameSync c, f
-        log noon.stringify map, colors:true
+                    
+        if not args.quiet
+            log noon.stringify map, colors:true
         
         buildPage()
         
