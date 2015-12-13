@@ -15,8 +15,10 @@ the result looks like this:
 
 ![tiles](http://monsterkodi.github.io/urtil/img/tiles.png)
 
-a more complex example:
+a more slightly more complex example:
 
-![complex](http://monsterkodi.github.io/urtil/img/complex.png)
+![example](http://monsterkodi.github.io/urtil/img/example.png)
 
-more examples and their setup can be found [here](http://monsterkodi.github.io/urtil).
+you can see it in action [here](http://monsterkodi.github.io/urtil/examples/example.html).
+
+some rudimentary [documentation](http://monsterkodi.github.io/urtil/about.html).
