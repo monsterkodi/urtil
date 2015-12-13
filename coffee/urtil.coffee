@@ -22,14 +22,14 @@ err      = () ->
 
 defaultTileWidth = 240
 defaultTileHeight = 160
-defaultScreenHeight = 930
+defaultScreenHeight = 1100
 
 has = (ol, kv) -> 
     return false if not ol?
     if _.isArray ol
         kv in ol
     else 
-        ol[kv]?
+        kv in Object.keys ol
 
 ###
 000   000   0000000   00     00
@@ -143,6 +143,7 @@ bar.tick 0
 buildPage = ->
 
     t = tiles
+    breakLast = false
     for u,i of map
         t += _.template(tile)
             href:   i.href
@@ -152,9 +153,13 @@ buildPage = ->
             
         if has urls[u], 'break'
             t += "        div.break\n"
+            breakLast = true
+        else
+            breakLast = false
 
-    for i in [0..6]    
-        t += "        span.site.empty\n"
+    if not breakLast
+        for i in [0...4]    
+            t += "        span.site.empty\n"
 
     h = jade.render t, name:name, pretty:true
 
@@ -177,7 +182,7 @@ load = (u) ->
     if u.indexOf('.') == -1
         us = "file://#{resolve path.join outdir, u + '.html'}" 
     else if not u.startsWith 'http'
-        us = "https://#{u}" 
+        us = "http://#{u}" 
     else 
         us = u
      
@@ -189,8 +194,12 @@ load = (u) ->
         img: f
     f = path.join img, f
 
-    refresh = (has(urls[u], 'refresh') or args.refresh) and not args.norefresh
+    refresh = has urls[u], 'refresh'
+    refresh = true  if args.refresh
+    refresh = false if args.norefresh
+    
     fexists = fs.existsSync f
+
     if fexists and not refresh 
         bar.tick 1
         map[u].cached = true
@@ -199,12 +208,14 @@ load = (u) ->
     else
         if fexists
             fs.renameSync f, path.join img, "."+map[u].img
+
+        sh = has(urls[u], 'screenHeight') and urls[u].screenHeight or args.screenHeight
         
         d = Q.defer()
         o = 
             windowSize:
-                width: parseInt args.screenHeight * args.tileWidth / args.tileHeight
-                height: args.screenHeight
+                width: parseInt sh * args.tileWidth / args.tileHeight
+                height: sh
             shotSize:
                 width: 'window'
                 height: 'window'
