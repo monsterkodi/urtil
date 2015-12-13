@@ -67,10 +67,6 @@ if args.version
     log require("#{__dirname}/../package.json").version
     process.exit()
 
-if args.tileSize?
-    args.tileWidth = args.tileSize
-    args.tileHeight = args.tileSize
-
 ###
 000  000   000  000  000000000
 000  0000  000  000     000   
@@ -84,7 +80,8 @@ outdir = resolve args.outDir
 name   = args.name
 
 sites  = resolve "#{indir}/#{name}"
-if not fs.existsSync sites
+
+if not fs.existsSync(sites) or fs.statSync(sites).isDirectory()
     for ext in sds.extensions
         sites = resolve "#{indir}/#{name}.#{ext}"
         if fs.existsSync sites
@@ -94,9 +91,18 @@ if not fs.existsSync sites then err "config file with name #{chalk.yellow name} 
 
 urls = sds.load sites
 
+if urls.config?
+    for k in ['tileWidth', 'tileHeight', 'tileSize']
+        args[k] = urls.config[k] if urls.config[k]?
+    delete urls['config']
+
+if args.tileSize?
+    args.tileWidth = args.tileSize
+    args.tileHeight = args.tileSize
+
 if not _.valuesIn(urls).length then err "config file seems to be empty!"
 
-img  = resolve "#{outdir}/.img/"
+img  = resolve "#{outdir}/img/"
 map  = {}
 html = resolve "#{outdir}/#{name}.html"
 
@@ -112,9 +118,6 @@ tile  = load path.join __dirname, '../jade/tile.jade'
 styl  = load path.join __dirname, '../jade/tiles.styl'
 styl  = _.template(styl) args
 css   = stylus.render styl
-
-if false
-    del.sync img
     
 mkpath.sync img
 
@@ -148,7 +151,7 @@ buildPage = ->
     for u,i of map
         t += _.template(tile)
             href:   i.href
-            img:    path.join(img, i.img)
+            img:    path.join('img', i.img)
             width:  args.tileWidth
             height: args.tileHeight
             
@@ -180,7 +183,8 @@ buildPage = ->
 
 load = (u) ->
     
-    if u.indexOf('.') == -1
+    local = u.indexOf('.') == -1
+    if local
         us = "file://#{resolve path.join outdir, u + '.html'}" 
     else if not u.startsWith 'http'
         us = "http://#{u}" 
@@ -189,21 +193,27 @@ load = (u) ->
      
     r = url.parse us
 
-    map[u] = href: r.href
+    map[u] = href: (local and "./#{u}.html" or r.href)
     
     if has urls[u], 'image'
         f = urls[u].image
         map[u].fixed = true
+    else if local
+        f = "#{u}.png"
     else
-        f = path.join r.hostname + (r.path != '/' and r.path.replace(/\//g, '.') or '') + '.png'
+        p = r.path != '/' and r.path.replace(/\//g, '.') or ''
+        p = p.replace /[~]/g, '_'
+        f = path.join r.hostname + p + '.png'
 
-    map[u].img = f
+    map[u].img = "#{f}"
+    
+    log map[u].img
         
     f = resolve path.join img, f
 
     refresh = has urls[u], 'refresh'
     refresh = true  if args.refresh
-    refresh = false if args.norefresh
+    refresh = false if args.norefresh or map[u].fixed
     
     fexists = fs.existsSync f
 
@@ -232,11 +242,11 @@ load = (u) ->
             bar.tick 1
             if e  
                 map[u].status = chalk.red 'failed'
-                log e
                 d.reject new Error e
             else
                 map[u].status = chalk.green 'ok'
                 d.resolve f
+            
         d.promise
 
 ###

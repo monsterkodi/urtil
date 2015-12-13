@@ -1,12 +1,11 @@
-fs       = require 'fs'
-del      = require 'del'
-sds      = require 'sds'
-path     = require 'path'
-copy     = require 'copy'
-chalk    = require 'chalk'
-gulp     = require 'gulp'
-p        = require('gulp-load-plugins') lazy:false
-
+fs    = require 'fs'
+del   = require 'del'
+sds   = require 'sds'
+path  = require 'path'
+copy  = require 'copy'
+chalk = require 'chalk'
+gulp  = require 'gulp'
+p     = require('gulp-load-plugins') lazy:false
 (eval "#{k} = p.#{k}" for k,v of p)
 
 onError = (err) -> util.log err
