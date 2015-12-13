@@ -1,8 +1,9 @@
 bin/log
 bin/run
+bin/publish
+Icon?
 coffee
-til
-url
+web
 .gitignore
 .npmignore
 gulpfile.coffee

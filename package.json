@@ -13,6 +13,17 @@
     "urtil": "./bin/urtil"
   },
   "preferGlobal": true,
+  "keywords": [
+    "web",
+    "page",
+    "html",
+    "generator",
+    "webshot",
+    "thumbnails",
+    "commandline",
+    "tool",
+    "cli"
+  ],  
   "dependencies": {
     "chalk": "^1.1.1",
     "del": "^2.2.0",

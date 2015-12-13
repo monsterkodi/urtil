@@ -2,13 +2,11 @@
 ### makes url tiles
 
 ```sh
-
 npm install -g urtils
 echo "github.com" >> tiles
 echo "npmjs.com" >> tiles
 urtil tiles
 open tiles.html
-
 ```
 
 The result looks like this:
