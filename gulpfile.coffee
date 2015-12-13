@@ -49,6 +49,7 @@ gulp.task 'bump', ->
         .pipe gulp.dest '.'
         
 gulp.task 'build', ['clean', 'coffee'], ->
+gulp.task 'release', ['clean', 'coffee_release'], ->
         
 gulp.task 'clean', (c) ->
     del ['js']

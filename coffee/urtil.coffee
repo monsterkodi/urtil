@@ -2,6 +2,8 @@ Q        = require 'q'
 fs       = require 'fs'
 url      = require 'url'
 del      = require 'del'
+sds      = require 'sds'
+noon     = require 'noon'
 path     = require 'path'
 _        = require 'lodash'
 chalk    = require 'chalk'
@@ -12,7 +14,6 @@ open     = require 'opn'
 jade     = require 'jade'
 stylus   = require 'stylus'
 progress = require 'progress2'
-noon     = require 'noon'
 nomnom   = require 'nomnom'
 resolve  = require './tools/resolve'
 log      = require './tools/log'
@@ -48,8 +49,8 @@ args = nomnom
          list: false
          default: 'index'
          required: false
-      inDir:      { abbr: 'i', default: './url', help: 'directory containing the url file'}
-      outDir:     { abbr: 'o', default: './til', help: 'directory where the generated tiles are stored'}     
+      inDir:      { abbr: 'i', default: '.', help: 'directory containing the config files'}
+      outDir:     { abbr: 'o', default: '.', help: 'directory where the generated tiles are stored'}     
       screenHeight: { default: defaultScreenHeight, help: 'screen height'} 
       tileWidth:  { abbr: 'W', default: defaultTileWidth, help: 'tile width'}
       tileHeight: { abbr: 'H', default: defaultTileHeight, help: 'tile height'}
@@ -60,12 +61,6 @@ args = nomnom
       refresh:    { abbr: 'r', flag: true, help: 'force refresh of all tiles'}
       norefresh:  { abbr: 'n', flag: true, help: 'disable refresh of all tiles'}
       version:    { abbr: 'V', flag: true, help: 'output version', hidden: true }
-   .help chalk.blue("config file format:\n") + """
-    \   <url>
-    \       width    <w>
-    \       height   <h>
-    \t 
-   """
    .parse()
 
 if args.version
@@ -88,16 +83,22 @@ indir  = resolve args.inDir
 outdir = resolve args.outDir
 name   = args.name
 
-sites = "#{indir}/#{name}"
-sites = "#{indir}/#{name}.noon" if not fs.existsSync sites
+sites  = resolve "#{indir}/#{name}"
+if not fs.existsSync sites
+    for ext in sds.extensions
+        sites = resolve "#{indir}/#{name}.#{ext}"
+        if fs.existsSync sites
+            break
 sites = "#{indir}/#{name}.crypt" if not fs.existsSync sites
 if not fs.existsSync sites then err "config file with name #{chalk.yellow name} not found in #{chalk.yellow indir}!"
 
-urls = noon.parse fs.readFileSync sites, encoding: 'utf8'
+urls = sds.load sites
 
-img  = "#{outdir}/.img/"
+if not _.valuesIn(urls).length then err "config file seems to be empty!"
+
+img  = resolve "#{outdir}/.img/"
 map  = {}
-html = "#{outdir}/#{name}.html"
+html = resolve "#{outdir}/#{name}.html"
 
 load = (f) ->
     try
@@ -164,7 +165,7 @@ buildPage = ->
     h = jade.render t, name:name, pretty:true
 
     r = _.template(h)(style: css)
-            
+                
     fs.writeFileSync html, r
     
     open html if args.view
@@ -263,10 +264,10 @@ Q.timeout p, args.timeout * 1000
             if 'ok' != chalk.stripColor i.status
                 if fs.existsSync c
                     fs.renameSync c, f
-                    
+
         if not args.quiet
             log noon.stringify map, colors:true
-        
+
         buildPage()
         
         process.exit()
