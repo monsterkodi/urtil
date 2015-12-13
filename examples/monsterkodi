@@ -1,0 +1,15 @@
+config
+    tileSize    300
+monsterkodi.net
+    image   ../monsterkodi.net.png
+monsterkodi.github.io
+    break
+    
+github.com/monsterkodi
+npmjs.com/~monsterkodi
+    break
+    
+projects
+    screenHeight  960
+    refresh
+    break

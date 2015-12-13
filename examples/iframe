@@ -1,0 +1,8 @@
+config
+    tileSize    220
+    screenHeight 600
+tiles
+useless
+    break
+monsterkodi
+    break

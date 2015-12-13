@@ -1,2 +1,5 @@
+config
+    tileWidth    600
+    tileHeight   500
 github.com
 npmjs.com
