@@ -206,9 +206,7 @@ load = (u) ->
         f = path.join r.hostname + p + '.png'
 
     map[u].img = "#{f}"
-    
-    log map[u].img
-        
+            
     f = resolve path.join img, f
 
     refresh = has urls[u], 'refresh'

@@ -17,7 +17,7 @@ The result looks like this:
 
 A slightly more complex example:
 
-![example](http://monsterkodi.github.io/urtil/img/example.png)
+<a href='http://monsterkodi.github.io/urtil/examples/example.html' alt='example'><img src='http://monsterkodi.github.io/urtil/img/example.png'></a>
 
 You can see the example in action [here](http://monsterkodi.github.io/urtil/examples/example.html).
 
