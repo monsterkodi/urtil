@@ -5,16 +5,11 @@ path     = require 'path'
 copy     = require 'copy'
 chalk    = require 'chalk'
 gulp     = require 'gulp'
-plumber  = require 'gulp-plumber'
-coffee   = require 'gulp-coffee'
-pepper   = require 'gulp-pepper'
-salt     = require 'gulp-salt'
-gutil    = require 'gulp-util'
-debug    = require 'gulp-debug'
-bump     = require 'gulp-bump'
-template = require 'gulp-template'
- 
-onError = (err) -> gutil.log err
+p        = require('gulp-load-plugins') lazy:false
+
+(eval "#{k} = p.#{k}" for k,v of p)
+
+onError = (err) -> util.log err
 
 gulp.task 'coffee', ->
     gulp.src ['coffee/**/*.coffee'], base: 'coffee'
