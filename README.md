@@ -19,6 +19,6 @@ A slightly more complex example:
 
 ![example](http://monsterkodi.github.io/urtil/img/example.png)
 
-You can see it in action [here](http://monsterkodi.github.io/urtil/examples/example.html).
+You can see the example in action [here](http://monsterkodi.github.io/urtil/examples/example.html).
 
-It comes with some rudimentary [documentation](http://monsterkodi.github.io/urtil/about.html).
+[urtil](http://monsterkodi.github.io/urtil/index.html) comes with some rudimentary [documentation](http://monsterkodi.github.io/urtil/about.html).
