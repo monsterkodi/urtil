@@ -11,14 +11,14 @@ open tiles.html
 
 ```
 
-the result looks like this:
+The result looks like this:
 
 ![tiles](http://monsterkodi.github.io/urtil/img/tiles.png)
 
-a more slightly more complex example:
+A slightly more complex example:
 
 ![example](http://monsterkodi.github.io/urtil/img/example.png)
 
-you can see it in action [here](http://monsterkodi.github.io/urtil/examples/example.html).
+You can see it in action [here](http://monsterkodi.github.io/urtil/examples/example.html).
 
-some rudimentary [documentation](http://monsterkodi.github.io/urtil/about.html).
+It comes with some rudimentary [documentation](http://monsterkodi.github.io/urtil/about.html).
