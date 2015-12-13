@@ -5,7 +5,7 @@
     "type": "git",
     "url": "git://github.com/monsterkodi/urtil"
   },
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "index.js",
   "author": "monsterkodi",
   "license": "Unlicense",
