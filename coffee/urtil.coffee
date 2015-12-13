@@ -188,12 +188,18 @@ load = (u) ->
         us = u
      
     r = url.parse us
-    f = path.join r.hostname + (r.path != '/' and r.path.replace(/\//g, '.') or '') + '.png'
 
-    map[u] = 
-        href: r.href
-        img: f
-    f = path.join img, f
+    map[u] = href: r.href
+    
+    if has urls[u], 'image'
+        f = urls[u].image
+        map[u].fixed = true
+    else
+        f = path.join r.hostname + (r.path != '/' and r.path.replace(/\//g, '.') or '') + '.png'
+
+    map[u].img = f
+        
+    f = resolve path.join img, f
 
     refresh = has urls[u], 'refresh'
     refresh = true  if args.refresh

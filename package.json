@@ -2,9 +2,10 @@
   "name": "urtil",
   "description": "makes url tiles",
   "repository": {
-    "url": "github.com/monsterkodi/urtil"
+    "type": "git",
+    "url": "git://github.com/monsterkodi/urtil"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "index.js",
   "author": "monsterkodi",
   "license": "Unlicense",
