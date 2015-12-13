@@ -8,6 +8,9 @@
   "main": "index.js",
   "author": "monsterkodi",
   "license": "Unlicense",
+  "bin": {
+    "urtil": "./bin/urtil"
+  },  
   "dependencies": {
     "chalk": "^1.1.1",
     "del": "^2.2.0",
