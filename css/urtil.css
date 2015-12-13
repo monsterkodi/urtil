@@ -50,7 +50,6 @@ h6 {
   margin: 0 0 20px;
   font-weight: bold;
   color: #63c0f5;
-  padding-top: 29px;
   color: #808080;
 }
 h1 {
@@ -72,9 +71,19 @@ h1 a:focus {
 }
 #stage h1 {
   font-size: 30px;
+  padding-top: 29px;
 }
 #stage h2 {
   font-size: 24px;
+  padding-top: 29px;
+}
+.iframe-container {
+  text-align: center;
+  margin-top: 30px;
+}
+iframe.examples {
+  border-radius: 20px;
+  display: inline-block;
 }
 footer {
   margin-top: 60px;

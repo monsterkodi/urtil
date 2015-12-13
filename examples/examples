@@ -2,4 +2,6 @@ config
     tileSize    300
 tiles
 useless
+    break
 monsterkodi
+    break
