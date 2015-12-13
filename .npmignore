@@ -1,9 +1,0 @@
-bin/log
-bin/run
-coffee
-til
-url
-.gitignore
-.npmignore
-gulpfile.coffee
-*.log

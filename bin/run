@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-cd "`dirname $0`/.."
-gulp build
-"./bin/`sds package.json -rp name`" $@
