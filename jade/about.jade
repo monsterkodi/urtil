@@ -10,12 +10,12 @@ html
                     a.link(href="index.html") urtil
                 nav
                     a.link(href='./about.html') about
-                    a.link(href='./examples/examples.html') example
+                    a.link(href='./examples/example.html') example
 
         #stage
-            h1 about
+            br
             p
-                a(href=".") urtil 
+                a(href="index.html") urtil 
                 | is a little tool that generates html pages,
                 | similar to the "New Tab" page of Firefox.
             p.    
@@ -30,9 +30,69 @@ html
                 
             img(src="./img/tiles.png" width="600")
                 
-            h2 example
-            
-            iframe.examples(height="600" width="600" src="./examples/iframe.html")
+            h2 example configs
+            p.
+                Some notes on the <a href="https://github.com/monsterkodi/urtil/tree/gh-pages/examples">config files</a> from the <a href='examples/example.html'>main example</a>:
+                
+            h4 
+                a(href="https://github.com/monsterkodi/urtil/blob/gh-pages/examples/examples") example
+            pre.
+                config
+                    tileSize    300
+                tiles
+                useless
+                    break
+                monsterkodi
+                    break
+            p.        
+                The first two lines tell urtil to make 300 pixel square tiles.
+            p.
+                If a top level entry contains no dot, urtil assumes it is a local html file.
+            p.
+                The <b>break</b> keyword centers the preceeding tiles and lets the next tile begin on a new line.
+                
+            h4 
+                a(href="https://github.com/monsterkodi/urtil/blob/gh-pages/examples/useless") useless
+            pre.
+                heeeeeeeey.com                                    
+                thatsthefinger.com                                
+                eelslap.com                                       
+                www.staggeringbeauty.com                          
+                www.republiquedesmangues.fr                       
+                www.movenowthinklater.com                         
+                www.koalastothemax.com                            
+                grandpanoclothes.com                              
+                ...
+            p.
+                This list contains a subset of the links from Tim Holmans 
+                <a href='https://github.com/tholman/the-useless-web'>useless-web</a>.
+            p.  
+                No config section was neccessary here because the defaults are suitable for larger link collections.
+
+            h4 
+                a(href="https://github.com/monsterkodi/urtil/blob/gh-pages/examples/monsterkodi") monsterkodi
+            pre.                
+                config
+                    tileSize      300
+                monsterkodi.net
+                    image         ../monsterkodi.net.png
+                monsterkodi.github.io
+                    break
+                    
+                github.com/monsterkodi
+                npmjs.com/~monsterkodi
+                    break
+                    
+                projects
+                    screenHeight  960
+                    refresh
+                    break
+                
+            p.
+                The <b>image</b> keyword (4th line) can be used to provide an image in case the website doesn't render with the underlying <a href=https://www.npmjs.com/package/webshot>webshot</a>.
+            p.
+                If urtil has created a thumbnail image for a webpage in previous runs, it doesn't regenerate it by default.
+                The <b>refresh</b> keyword forces it to regenerate the thumbnail on every run.
 
         footer
             a.link.icon(href="https://github.com/monsterkodi/urtil")
