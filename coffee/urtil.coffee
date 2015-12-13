@@ -51,10 +51,10 @@ args = nomnom
          required: false
       inDir:      { abbr: 'i', default: '.', help: 'directory containing the config files'}
       outDir:     { abbr: 'o', default: '.', help: 'directory where the generated tiles are stored'}     
-      screenHeight: { default: defaultScreenHeight, help: 'screen height'} 
       tileWidth:  { abbr: 'W', default: defaultTileWidth, help: 'tile width'}
       tileHeight: { abbr: 'H', default: defaultTileHeight, help: 'tile height'}
       tileSize:   { abbr: 'S', help: 'shortcut to set tile width and height (square tiles)'}
+      screenHeight: { default: defaultScreenHeight, help: 'screen height'} 
       timeout:    { abbr: 't', default: 60, help: 'maximal page retrieval time in seconds'}
       view:       { abbr: 'v', default: true, toggle: true, help: 'open generated page'}
       quiet:      { abbr: 'q', flag: true, help: 'less verbose console output'}

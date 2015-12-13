@@ -1,19 +1,18 @@
-path     = require 'path'
-gulp     = require 'gulp'
-plumber  = require 'gulp-plumber'
+fs       = require 'fs'
 del      = require 'del'
 sds      = require 'sds'
+path     = require 'path'
+copy     = require 'copy'
+chalk    = require 'chalk'
+gulp     = require 'gulp'
+plumber  = require 'gulp-plumber'
 coffee   = require 'gulp-coffee'
 pepper   = require 'gulp-pepper'
 salt     = require 'gulp-salt'
 gutil    = require 'gulp-util'
 debug    = require 'gulp-debug'
 bump     = require 'gulp-bump'
-fs       = require 'fs'
-copy     = require 'copy'
-chalk    = require 'chalk'
 template = require 'gulp-template'
-packagej = require './package.json'
  
 onError = (err) -> gutil.log err
 
@@ -29,7 +28,6 @@ gulp.task 'coffee', ->
 
 gulp.task 'coffee_release', ->
     gulp.src ['coffee/**/*.coffee'], base: './coffee'
-        .pipe plumber()
         .pipe pepper
             stringify: (info) -> '""'
             paprika: 
@@ -44,12 +42,12 @@ gulp.task 'salt', ->
         .pipe gulp.dest '.'
 
 gulp.task 'bump', ->
-    gulp.src('./package.json')
+    gulp.src './package.json'
         .pipe bump()
         .pipe gulp.dest '.'
         
 gulp.task 'build', ['clean', 'coffee'], ->
-gulp.task 'release', ['clean', 'coffee_release'], ->
+gulp.task 'release', ['clean', 'bump', 'coffee_release'], ->
         
 gulp.task 'clean', (c) ->
     del ['js']
