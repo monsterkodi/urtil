@@ -55,6 +55,7 @@ args = nomnom
       tileHeight: { abbr: 'H', default: defaultTileHeight, help: 'tile height'}
       tileSize:   { abbr: 'S', help: 'shortcut to set tile width and height (square tiles)'}
       screenHeight: { default: defaultScreenHeight, help: 'screen height'} 
+      bgColor:    { default: '#ddd', help: 'background color'} 
       timeout:    { abbr: 't', default: 60, help: 'maximal page retrieval time in seconds'}
       view:       { abbr: 'v', default: true, toggle: true, help: 'open generated page'}
       quiet:      { abbr: 'q', flag: true, help: 'less verbose console output'}
@@ -91,8 +92,12 @@ if not fs.existsSync sites then err "config file with name #{chalk.yellow name} 
 
 urls = sds.load sites
 
+if urls['@']?
+    urls.config = urls['@']
+    delete urls['@']
+    
 if urls.config?
-    for k in ['tileWidth', 'tileHeight', 'tileSize']
+    for k in ['tileWidth', 'tileHeight', 'tileSize', 'bgColor']
         args[k] = urls.config[k] if urls.config[k]?
     delete urls['config']
 
@@ -100,7 +105,8 @@ if args.tileSize?
     args.tileWidth = args.tileSize
     args.tileHeight = args.tileSize
 
-if not _.valuesIn(urls).length then err "config file seems to be empty!"
+if _.isEmpty(urls) and not args.bgColor == "#ddd"
+    err "config file seems to be empty!", noon.stringify urls
 
 img  = resolve "#{outdir}/img/"
 map  = {}
@@ -129,12 +135,13 @@ mkpath.sync img
 0000000    000   000  000   000
 ###
 
-bar = new progress ":bar :current"+chalk.gray("/#{_.size urls}"),
-    complete: chalk.bold.blue '█'
-    incomplete: chalk.gray '█'
-    width: 48
-    total: _.size urls
-bar.tick 0
+if not _.isEmpty(urls)
+    bar = new progress ":bar :current"+chalk.gray("/#{_.size urls}"),
+        complete: chalk.bold.blue '█'
+        incomplete: chalk.gray '█'
+        width: 48
+        total: _.size urls
+    bar.tick 0
 
 ###
 0000000    000   000  000  000      0000000   
