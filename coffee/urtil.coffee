@@ -10,6 +10,7 @@ chalk    = require 'chalk'
 mkpath   = require 'mkpath'
 webshot  = require 'webshot'
 process  = require 'process'
+child_process = require 'child_process'
 open     = require 'opn'
 jade     = require 'jade'
 stylus   = require 'stylus'
@@ -58,6 +59,7 @@ args = nomnom
       bgColor:    { default: '#ddd', help: 'background color'} 
       timeout:    { abbr: 't', default: 60, help: 'maximal page retrieval time in seconds'}
       view:       { abbr: 'v', default: true, toggle: true, help: 'open generated page'}
+      progress:   { abbr: 'p', default: true, toggle: true, help: 'display progress bar'}
       quiet:      { abbr: 'q', flag: true, help: 'less verbose console output'}
       refresh:    { abbr: 'r', flag: true, help: 'force refresh of all tiles'}
       norefresh:  { abbr: 'n', flag: true, help: 'disable refresh of all tiles'}
@@ -78,9 +80,8 @@ if args.version
 
 indir  = resolve args.inDir
 outdir = resolve args.outDir
-name   = args.name
-
-sites  = resolve "#{indir}/#{name}"
+name   = path.basename args.name, path.extname args.name
+sites  = resolve "#{indir}/#{args.name}"
 
 if not fs.existsSync(sites) or fs.statSync(sites).isDirectory()
     for ext in sds.extensions
@@ -135,7 +136,7 @@ mkpath.sync img
 0000000    000   000  000   000
 ###
 
-if not _.isEmpty(urls)
+if not _.isEmpty(urls) and args.progress
     bar = new progress ":bar :current"+chalk.gray("/#{_.size urls}"),
         complete: chalk.bold.blue '█'
         incomplete: chalk.gray '█'
@@ -223,13 +224,34 @@ load = (u) ->
     fexists = fs.existsSync f
 
     if fexists and not refresh 
-        bar.tick 1
+        bar?.tick 1
         map[u].cached = true
         map[u].status = chalk.green 'ok'
         Q.fcall -> f
     else
         if fexists
             fs.renameSync f, path.join img, "."+map[u].img
+            
+        ###
+        000   000  000000000  00     00  000    
+        000   000     000     000   000  000    
+        000000000     000     000000000  000    
+        000   000     000     000 0 000  000    
+        000   000     000     000   000  0000000
+        ###
+        # if has urls[u], 'html'
+        #     delete urls[u]['html']
+        #     sds.save "#{u}.noon", urls[u]
+        #     console.log 'saved', new String child_process.execSync "cat #{u}.noon"
+        #     # cmd = "#{process.argv[1]} -q -p 0 -v 0 #{u}.noon"
+        #     # log cmd
+        #     # log process.cwd()
+        #     # log child_process.spawnSync process.argv[0], [process.argv[1], '-q', '-p', '0', '-v', '0', "#{u}.noon"]
+        #     # log child_process.execSync cmd,
+        #     log child_process.execFileSync process.argv[1], ['-q', '-p', '0', '-v', '0', "#{u}.noon"],
+        #         cwd: process.cwd()
+        #         encoding: 'utf8'
+        #         shell: '/usr/local/bin/bash'
 
         sh = has(urls[u], 'screenHeight') and urls[u].screenHeight or args.screenHeight
         
@@ -244,7 +266,7 @@ load = (u) ->
             defaultWhiteBackground: true
             
         webshot us, f, o, (e) ->
-            bar.tick 1
+            bar?.tick 1
             if e  
                 map[u].status = chalk.red 'failed'
                 d.reject new Error e
@@ -291,4 +313,6 @@ Q.timeout p, args.timeout * 1000
 
         buildPage()
         
-        process.exit()
+        if args.quiet
+            log 'done'
+        process.exit 0
