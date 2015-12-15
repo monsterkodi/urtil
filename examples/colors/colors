@@ -1,4 +1,22 @@
-@  . bgColor  black
+@                               . bg  black  . ts  400
 
-red     . html . @ .. bgColor  #f00
-green   . html . @ .. bgColor  #0f0
+red             . ! . html . @ .. bg  #f00  .. tw  800 .. th  300
+    r1          . ! . html . @ .. bg  #800
+    r2          . ! . html . @ .. bg  #c00
+    r3          . ! . html . @ .. bg  #f40  .. ts  800
+        r4      . ! . html . @ .. bg  #f80  
+green           . ! . html . @ .. bg  #0f0   . sh  500 . -
+    g1          . ! . html . @ .. bg  #080  .. ts  800
+        g2      . ! . html . @ .. bg  #0c0  
+    g3          . ! . html . @ .. bg  #0f4  .. ts  800
+        g4      . ! . html . @ .. bg  #0f8
+blue            . ! . html . @ .. bg  blue   . sh  500
+    b1          . ! . html . @ .. bg  #008
+    b2          . ! . html . @ .. bg  #00c  .. tw  800 .. th  500
+        b3      . ! . html . @ .. bg  #44f  .. ts  600
+            b4  . ! . html . @ .. bg  #88f
+yellow          . ! . html . @ .. bg  #ff0  .. tw  450 .. th  900 . -
+    y1          . ! . html . @ .. bg  #880  .. ts  400
+        y2      . ! . html . @ .. bg  #cc0
+        y3      . ! . html . @ .. bg  #ff4  .. ts  800
+    y4          . ! . html . @ .. bg  #ff8
