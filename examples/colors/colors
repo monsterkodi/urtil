@@ -1,0 +1,4 @@
+@  . bgColor  black
+
+red     . html . @ .. bgColor  #f00
+green   . html . @ .. bgColor  #0f0

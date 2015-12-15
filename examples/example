@@ -1,8 +1,66 @@
-config
-    tileSize    300
-tiles
-useless
-    break
-monsterkodi
-    refresh
-    break
+@                                               . bgColor   #555 . tileSize    300
+tiles                                           . html . refresh
+    @                                           . tileWidth  300 . tileHeight  210 . bgColor  #7fc4d2
+    github.com                                  . -
+    atom.io
+    electron.atom.io                            . -
+    nodejs.org
+    npmjs.com                                   . -
+    gulpjs.com
+    gruntjs.com                                 . -
+    
+
+useless                                         . html . refresh . screenHeight  1050
+    @                                           . bgColor  #cf4646
+    heeeeeeeey.com                                    
+    thatsthefinger.com                                
+    eelslap.com                                       
+    www.staggeringbeauty.com                          
+    www.republiquedesmangues.fr                       
+    www.movenowthinklater.com                         
+    www.koalastothemax.com                            
+    grandpanoclothes.com                              
+    r33b.net                                                   
+    hasthelargehadroncolliderdestroyedtheworldyet.com 
+    ihasabucket.com                                   
+    corndogoncorndog.com                              
+    willthefuturebeaweso.me                           
+    www.ouaismaisbon.ch                              
+    corgiorgy.com                                     
+    www.nelson-haha.com                               
+    www.wutdafuk.com                                  
+    unicodesnowmanforyou.com                          
+    tencents.info                                     
+    pixelsfighting.com                                
+    baconsizzling.com                                 
+    isitwhite.com                                     
+    noot.space                                        
+    tomsdog.com                                       
+    hardcoreprawnlawn.com                             
+    www.omfgdogs.com                                  
+    thefo.nz                                          
+    oct82.com                                         
+    semanticresponsiveillustration.com              
+                                                -
+monsterkodi                                     . html . - . refresh
+    @                                           . bgColor  #444 . tileSize  300
+    monsterkodi.net
+                                                image   ../monsterkodi.net.png
+    monsterkodi.github.io
+                                                -
+    github.com/monsterkodi
+    npmjs.com/~monsterkodi
+                                                -
+    projects                                    . html . - . screenHeight  960 . refresh
+        @                                       . bgColor  #333 . tileSize   250
+
+        monsterkodi.github.io/urtil
+        monsterkodi.github.io/password-turtle
+        monsterkodi.github.io/knix
+                                                -
+        www.npmjs.com/package/strudl
+        www.npmjs.com/package/sds
+        www.npmjs.com/package/noon
+                                                -
+        www.npmjs.com/package/color-ls
+                                                -

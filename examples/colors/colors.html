@@ -1,0 +1,37 @@
+
+<html>
+  <head>
+    <title>colors</title>
+    <style>body {
+  background-color: #000;
+  padding: 30px;
+}
+a {
+  outline: none;
+}
+#stage {
+  text-align: center;
+}
+.site {
+  margin: 20px;
+  box-sizing: border-box;
+  width: 240px;
+  height: 160px;
+  display: inline-block;
+}
+.site img {
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.2);
+}
+.site img:hover {
+  box-shadow: 3px 3px 6px 3px rgba(0,0,0,0.1);
+}
+.site.empty {
+  background-color: transparent;
+}
+</style>
+  </head>
+</html>
+<body>
+  <div id="stage"><span class="site"><a href="./red.html"><img src="img/red.png" width="240" height="160"/></a></span><span class="site"><a href="./green.html"><img src="img/green.png" width="240" height="160"/></a></span><span class="site empty"></span><span class="site empty"></span><span class="site empty"></span><span class="site empty"></span></div>
+</body>
