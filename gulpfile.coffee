@@ -20,6 +20,8 @@ gulp.task 'jade', ->
         .pipe jade pretty: true
         .pipe gulp.dest '.'
 
+gulp.task 'build', ['jade', 'style']
+
 gulp.task 'default', ->
                 
     gulp.watch 'jade/*.jade', ['jade']
