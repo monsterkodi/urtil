@@ -1,6 +1,6 @@
 fs       = require 'fs'
 url      = require 'url'
-del      = require 'del'
+rm       = require 'del'
 sds      = require 'sds'
 noon     = require 'noon'
 path     = require 'path'
@@ -32,6 +32,20 @@ has = (ol, kv) ->
     else 
         kv in Object.keys ol
 
+set = (ol, kv, v=null) ->
+    return if not ol?
+    if _.isArray ol
+        ol.push kv
+    else
+        ol[kv] = v
+
+del = (ol, kv) ->
+    return if not ol?
+    if _.isArray ol
+        _.pull ol, kv
+    else
+        delete ol[kv]
+        
 ###
 000   000   0000000   00     00
 0000  000  000   000  000   000
@@ -59,6 +73,7 @@ args = nomnom
       timeout:    { abbr: 't', default: 60, help: 'maximal page retrieval time in seconds'}
       view:       { abbr: 'v', default: true, toggle: true, help: 'open generated page'}
       progress:   { abbr: 'p', default: true, toggle: true, help: 'display progress bar'}
+      delete:     { abbr: 'd', default: true, toggle: true, help: 'delete intermediate noon files'}
       quiet:      { abbr: 'q', flag: true, help: 'less verbose console output'}
       refresh:    { abbr: 'r', flag: true, help: 'force refresh of all tiles'}
       norefresh:  { abbr: 'n', flag: true, help: 'disable refresh of all tiles'}
@@ -92,14 +107,30 @@ if not fs.existsSync sites then err "config file with name #{chalk.yellow name} 
 
 urls = sds.load sites
 
-if urls['@']?
-    urls.config = urls['@']
-    delete urls['@']
+swapAlias = (ul) ->
+    swp = (o, a, b) ->
+        if has o, a
+            set o, b, o[a]
+            del o, a
+            
+    alias = [
+        ['-', 'break']
+        ['!', 'refresh']
+        ['sh', 'screenHeight']
+        ['th', 'tileHeight']
+        ['tw', 'tileWidth']
+        ['ts', 'tileSize']
+        ['bg', 'bgColor']
+        ['@', 'config']
+    ]
+
+    for u,v of ul
+        for a in alias
+            swp v, a[0], a[1]
+    for a in alias
+        swp ul, a[0], a[1]
     
-for u,v of urls
-    if has v, '-'
-        v.break = true
-        delete v['-']
+swapAlias urls
     
 if urls.config?
     for k in ['tileWidth', 'tileHeight', 'tileSize', 'bgColor']
@@ -243,17 +274,28 @@ load = (u, cb) ->
         000   000     000     000 0 000  000    
         000   000     000     000   000  0000000
         ###
+
         if has urls[u], 'html'
             delete urls[u]['html']
             uc = _.clone urls[u]
+            swapAlias uc
             delete uc['break']
+            delete uc['refresh']
+            delete uc['tileSize']
+            delete uc['tileWidth']
+            delete uc['tileHeight']
             delete uc['screenHeight']
             sds.save "#{u}.noon", uc
-            cmd = "#{process.argv[0]} #{process.argv[1]} -q -p 0 -v 0 #{u}.noon"
+            cmd = "#{process.argv[0]} #{process.argv[1]} -v 0 #{u}.noon"
+            if not args.progress then cmd += '-p 0'
+            if args.quiet   then cmd += " -q"
             if args.refresh then cmd += " -r"
             childp.execSync cmd,
                 cwd: process.cwd()
                 encoding: 'utf8'
+                stdio: 'inherit'
+            if args.delete
+                rm.sync "#{u}.noon"
 
         sh = has(urls[u], 'screenHeight') and urls[u].screenHeight or args.screenHeight
         
@@ -289,9 +331,6 @@ if _.isEmpty urls
 numLoaded = 0
 onLoaded = (u) -> 
     numLoaded += 1
-    if not args.quiet
-        process.stdout.clearLine()
-        process.stdout.cursorTo 0
     i = map[u]
     f = path.join img, i.img
     c = path.join img, "."+i.img
@@ -300,8 +339,9 @@ onLoaded = (u) ->
     if 'ok' != chalk.stripColor i.status
         if fs.existsSync c
             fs.renameSync c, f
-    if numLoaded == _.size(urls)
+    if numLoaded == _.size urls
         if not args.quiet
+            log ''
             log noon.stringify map, colors:true
         buildPage()
         process.exit 0
@@ -312,11 +352,10 @@ else
     l = ( load(u, onLoaded) for u of urls )
 
 onTimeout = ->
-    if not args.quiet
+    if not args.quiet and args.progress
         process.stdout.clearLine()
         process.stdout.cursorTo 0
         log chalk.bold.yellow.bgRed '       timeout       '
-    log 'timeout'
     process.exit 0
 
 setTimeout onTimeout, args.timeout * 1000
