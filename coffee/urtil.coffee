@@ -1,4 +1,3 @@
-Q        = require 'q'
 fs       = require 'fs'
 url      = require 'url'
 del      = require 'del'
@@ -10,7 +9,7 @@ chalk    = require 'chalk'
 mkpath   = require 'mkpath'
 webshot  = require 'webshot'
 process  = require 'process'
-child_process = require 'child_process'
+childp   = require 'child_process'
 open     = require 'opn'
 jade     = require 'jade'
 stylus   = require 'stylus'
@@ -189,7 +188,7 @@ buildPage = ->
 0000000   0000000   000   000  0000000  
 ###
 
-load = (u) ->
+load = (u, cb) ->
     
     local = u.indexOf('.') == -1
     if local
@@ -227,7 +226,7 @@ load = (u) ->
         bar?.tick 1
         map[u].cached = true
         map[u].status = chalk.green 'ok'
-        Q.fcall -> f
+        cb u
     else
         if fexists
             fs.renameSync f, path.join img, "."+map[u].img
@@ -239,23 +238,20 @@ load = (u) ->
         000   000     000     000 0 000  000    
         000   000     000     000   000  0000000
         ###
-        # if has urls[u], 'html'
-        #     delete urls[u]['html']
-        #     sds.save "#{u}.noon", urls[u]
-        #     console.log 'saved', new String child_process.execSync "cat #{u}.noon"
-        #     # cmd = "#{process.argv[1]} -q -p 0 -v 0 #{u}.noon"
-        #     # log cmd
-        #     # log process.cwd()
-        #     # log child_process.spawnSync process.argv[0], [process.argv[1], '-q', '-p', '0', '-v', '0', "#{u}.noon"]
-        #     # log child_process.execSync cmd,
-        #     log child_process.execFileSync process.argv[1], ['-q', '-p', '0', '-v', '0', "#{u}.noon"],
-        #         cwd: process.cwd()
-        #         encoding: 'utf8'
-        #         shell: '/usr/local/bin/bash'
+        if has urls[u], 'html'
+            delete urls[u]['html']
+            uc = _.clone urls[u]
+            delete uc['break']
+            delete uc['screenHeight']
+            sds.save "#{u}.noon", uc
+            cmd = "#{process.argv[0]} #{process.argv[1]} -q -p 0 -v 0 #{u}.noon"
+            if args.refresh then cmd += " -r"
+            childp.execSync cmd,
+                cwd: process.cwd()
+                encoding: 'utf8'
 
         sh = has(urls[u], 'screenHeight') and urls[u].screenHeight or args.screenHeight
         
-        d = Q.defer()
         o = 
             windowSize:
                 width: parseInt sh * args.tileWidth / args.tileHeight
@@ -265,16 +261,13 @@ load = (u) ->
                 height: 'window'
             defaultWhiteBackground: true
             
-        webshot us, f, o, (e) ->
+        webshot us, f, o, (e) =>
             bar?.tick 1
             if e  
                 map[u].status = chalk.red 'failed'
-                d.reject new Error e
             else
                 map[u].status = chalk.green 'ok'
-                d.resolve f
-            
-        d.promise
+            cb u
 
 ###
  0000000   0000000   0000000   000   000
@@ -284,35 +277,41 @@ load = (u) ->
 0000000    0000000  000   000  000   000
 ###
 
-if _.isArray urls
-    l = ( load(u) for u in urls )
-else
-    l = ( load(u) for u of urls )
+if _.isEmpty(urls)
+    buildPage()
+    process.exit 0
 
-p = Q.allSettled l
-
-Q.timeout p, args.timeout * 1000
-    .fail -> 
+numLoaded = 0
+onLoaded = (u) -> 
+    numLoaded += 1
+    if not args.quiet
         process.stdout.clearLine()
         process.stdout.cursorTo(0)
-        log chalk.bold.yellow.bgRed '       timeout       '
-    .then (results) -> 
-        process.stdout.clearLine()
-        process.stdout.cursorTo(0)
-        for u,i of map
-            f = path.join img, i.img
-            c = path.join img, "."+i.img
-            if not i.status?
-                i.status = chalk.red 'timeout'
-            if 'ok' != chalk.stripColor i.status
-                if fs.existsSync c
-                    fs.renameSync c, f
-
+    i = map[u]
+    f = path.join img, i.img
+    c = path.join img, "."+i.img
+    if not i.status?
+        i.status = chalk.red 'timeout'
+    if 'ok' != chalk.stripColor i.status
+        if fs.existsSync c
+            fs.renameSync c, f
+    if numLoaded == _.size(urls)
         if not args.quiet
             log noon.stringify map, colors:true
-
         buildPage()
-        
-        if args.quiet
-            log 'done'
         process.exit 0
+
+if _.isArray urls
+    l = ( load(u, onLoaded) for u in urls )
+else
+    l = ( load(u, onLoaded) for u of urls )
+
+onTimeout = ->
+    if not args.quiet
+        process.stdout?.clearLine?()
+        process.stdout?.cursorTo?(0)
+        log chalk.bold.yellow.bgRed '       timeout       '
+    log 'timeout'
+    process.exit 0
+
+setTimeout onTimeout, args.timeout * 1000
