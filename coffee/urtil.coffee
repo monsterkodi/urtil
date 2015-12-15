@@ -96,6 +96,11 @@ if urls['@']?
     urls.config = urls['@']
     delete urls['@']
     
+for u,v of urls
+    if has v, '-'
+        v.break = true
+        delete v['-']
+    
 if urls.config?
     for k in ['tileWidth', 'tileHeight', 'tileSize', 'bgColor']
         args[k] = urls.config[k] if urls.config[k]?
@@ -277,7 +282,7 @@ load = (u, cb) ->
 0000000    0000000  000   000  000   000
 ###
 
-if _.isEmpty(urls)
+if _.isEmpty urls
     buildPage()
     process.exit 0
 
@@ -286,7 +291,7 @@ onLoaded = (u) ->
     numLoaded += 1
     if not args.quiet
         process.stdout.clearLine()
-        process.stdout.cursorTo(0)
+        process.stdout.cursorTo 0
     i = map[u]
     f = path.join img, i.img
     c = path.join img, "."+i.img
@@ -308,8 +313,8 @@ else
 
 onTimeout = ->
     if not args.quiet
-        process.stdout?.clearLine?()
-        process.stdout?.cursorTo?(0)
+        process.stdout.clearLine()
+        process.stdout.cursorTo 0
         log chalk.bold.yellow.bgRed '       timeout       '
     log 'timeout'
     process.exit 0
