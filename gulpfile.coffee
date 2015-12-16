@@ -30,7 +30,7 @@ gulp.task 'coffee_release', ->
         .pipe gulp.dest 'js'
     
 gulp.task 'salt', ->
-    gulp.src ['coffee/**/*.coffee', 'jade/*.styl'], base: '.'
+    gulp.src ['coffee/**/*.coffee', 'jade/tiles.coffee', 'jade/*.styl'], base: '.'
         .pipe plumber()
         .pipe salt()
         .pipe gulp.dest '.'

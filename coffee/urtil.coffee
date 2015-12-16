@@ -1,3 +1,12 @@
+
+###
+000   000  00000000   000000000  000  000    
+000   000  000   000     000     000  000    
+000   000  0000000       000     000  000    
+000   000  000   000     000     000  000    
+ 0000000   000   000     000     000  0000000
+###
+
 fs       = require 'fs'
 url      = require 'url'
 rm       = require 'del'
@@ -13,6 +22,7 @@ childp   = require 'child_process'
 open     = require 'opn'
 jade     = require 'jade'
 stylus   = require 'stylus'
+coffee   = require 'coffee-script'
 progress = require 'progress2'
 nomnom   = require 'nomnom'
 resolve  = require './tools/resolve'
@@ -78,6 +88,7 @@ args = nomnom
       refresh:    { abbr: 'r', flag: true, help: 'force refresh of all tiles'}
       norefresh:  { abbr: 'n', flag: true, help: 'disable refresh of all tiles'}
       version:    { abbr: 'V', flag: true, help: 'output version', hidden: true }
+      uplink:     { abbr: 'U', default: '', help: 'link to level up', hidden: true }
    .parse()
 
 if args.version
@@ -155,11 +166,14 @@ load = (f) ->
         err "can't read file", chalk.yellow f, chalk.magenta e
         process.exit -1
 
-tiles = load path.join __dirname, '../jade/tiles.jade'
-tile  = load path.join __dirname, '../jade/tile.jade'
-styl  = load path.join __dirname, '../jade/tiles.styl'
-styl  = _.template(styl) args
-css   = stylus.render styl
+tiles  = load path.join __dirname, '../jade/tiles.jade'
+tile   = load path.join __dirname, '../jade/tile.jade'
+styl   = load path.join __dirname, '../jade/tiles.styl'
+styl   = _.template(styl) args
+css    = stylus.render styl
+coff   = load path.join __dirname, '../jade/tiles.coffee'
+coff   = _.template(coff) args
+script = coffee.compile coff
     
 mkpath.sync img
 
@@ -210,7 +224,7 @@ buildPage = ->
 
     h = jade.render t, name:name, pretty:true
 
-    r = _.template(h)(style: css)
+    r = _.template(h)(style: css, script:script)
                 
     fs.writeFileSync html, r
     
@@ -286,7 +300,7 @@ load = (u, cb) ->
             delete uc['tileHeight']
             delete uc['screenHeight']
             sds.save "#{u}.noon", uc
-            cmd = "#{process.argv[0]} #{process.argv[1]} -v 0 #{u}.noon"
+            cmd = "#{process.argv[0]} #{process.argv[1]} -v 0 -U ./#{name}.html #{u}.noon"
             if not args.progress then cmd += '-p 0'
             if args.quiet   then cmd += " -q"
             if args.refresh then cmd += " -r"
