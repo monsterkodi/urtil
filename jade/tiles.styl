@@ -1,26 +1,40 @@
 body 
-    background-color <%= bgColor %>
-    padding 30px
+    background-color    <%= bgColor %>
+    padding             30px
 
 a 
-    outline none
+    outline             none
 
 #stage
-    text-align center
+    text-align          center
 
-.site 
-    margin 20px
-    box-sizing border-box
-    width <%= tileWidth %>px
-    height <%= tileHeight %>px
-    display inline-block
+span.site 
+    margin              20px
+    box-sizing          border-box
+    width               <%= tileWidth %>px
+    height              <%= tileHeight %>px
+    display             inline-block
+    position            relative
 
-.site img 
-    border-radius 10px
-    box-shadow 1px 1px 1px 1px rgba(0, 0, 0, 0.2)
+img.site
+    border-radius       10px
+    box-shadow          1px 1px 1px 1px rgba(0, 0, 0, 0.2)
 
-.site img:hover 
-    box-shadow 3px 3px 6px 3px rgba(0, 0, 0, 0.1)
+img.site:hover 
+    box-shadow          3px 3px 6px 3px rgba(0, 0, 0, 0.1)
 
 .site.empty 
-    background-color transparent
+    background-color    transparent
+    
+.site.name
+    font-family         Verdana, Arial, sans-serif
+    font-weight         bold
+    color               <%= fgColor %>
+    max-width           <%= tileWidth %>px
+    width               <%= tileWidth %>px
+    overflow            hidden
+    display             none
+    position            absolute
+    top                 -25px
+    white-space         nowrap
+    text-align          center

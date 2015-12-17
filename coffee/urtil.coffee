@@ -11,20 +11,20 @@ fs       = require 'fs'
 url      = require 'url'
 rm       = require 'del'
 sds      = require 'sds'
+open     = require 'opn'
+jade     = require 'jade'
 noon     = require 'noon'
 path     = require 'path'
-_        = require 'lodash'
 chalk    = require 'chalk'
+nomnom   = require 'nomnom'
+stylus   = require 'stylus'
+_        = require 'lodash'
 mkpath   = require 'mkpath'
 webshot  = require 'webshot'
 process  = require 'process'
-childp   = require 'child_process'
-open     = require 'opn'
-jade     = require 'jade'
-stylus   = require 'stylus'
-coffee   = require 'coffee-script'
 progress = require 'progress2'
-nomnom   = require 'nomnom'
+childp   = require 'child_process'
+coffee   = require 'coffee-script'
 resolve  = require './tools/resolve'
 log      = require './tools/log'
 err      = () -> 
@@ -35,27 +35,6 @@ defaultTileWidth = 240
 defaultTileHeight = 160
 defaultScreenHeight = 1100
 
-has = (ol, kv) -> 
-    return false if not ol?
-    if _.isArray ol
-        kv in ol
-    else 
-        kv in Object.keys ol
-
-set = (ol, kv, v=null) ->
-    return if not ol?
-    if _.isArray ol
-        ol.push kv
-    else
-        ol[kv] = v
-
-del = (ol, kv) ->
-    return if not ol?
-    if _.isArray ol
-        _.pull ol, kv
-    else
-        delete ol[kv]
-        
 ###
 000   000   0000000   00     00
 0000  000  000   000  000   000
@@ -80,6 +59,7 @@ args = nomnom
       tileSize:   { abbr: 'S', help: 'shortcut to set tile width and height (square tiles)'}
       screenHeight: { default: defaultScreenHeight, help: 'screen height'} 
       bgColor:    { default: '#ddd', help: 'background color'} 
+      fgColor:    { default: '#000', help: 'text color'} 
       timeout:    { abbr: 't', default: 60, help: 'maximal page retrieval time in seconds'}
       view:       { abbr: 'v', default: true, toggle: true, help: 'open generated page'}
       progress:   { abbr: 'p', default: true, toggle: true, help: 'display progress bar'}
@@ -118,21 +98,52 @@ if not fs.existsSync sites then err "config file with name #{chalk.yellow name} 
 
 urls = sds.load sites
 
+has = (ol, kv) -> 
+    return false if not ol?
+    if _.isArray ol
+        kv in ol
+    else 
+        kv in Object.keys ol
+
+set = (ol, kv, v=null) ->
+    return if not ol?
+    if _.isArray ol
+        ol.push kv
+    else
+        ol[kv] = v
+
+del = (ol, kv) ->
+    return if not ol?
+    if _.isArray ol
+        _.pull ol, kv
+    else
+        delete ol[kv]
+        
+###
+ 0000000   000      000   0000000    0000000
+000   000  000      000  000   000  000     
+000000000  000      000  000000000  0000000 
+000   000  000      000  000   000       000
+000   000  0000000  000  000   000  0000000 
+###
+        
 swapAlias = (ul) ->
+    
     swp = (o, a, b) ->
         if has o, a
             set o, b, o[a]
             del o, a
             
     alias = [
-        ['-', 'break']
-        ['!', 'refresh']
+        ['-',  'break']
+        ['!',  'refresh']
         ['sh', 'screenHeight']
         ['th', 'tileHeight']
         ['tw', 'tileWidth']
         ['ts', 'tileSize']
         ['bg', 'bgColor']
-        ['@', 'config']
+        ['fg', 'fgColor']
+        ['@',  'config']
     ]
 
     for u,v of ul
@@ -144,7 +155,7 @@ swapAlias = (ul) ->
 swapAlias urls
     
 if urls.config?
-    for k in ['tileWidth', 'tileHeight', 'tileSize', 'bgColor']
+    for k in ['tileWidth', 'tileHeight', 'tileSize', 'bgColor', 'fgColor']
         args[k] = urls.config[k] if urls.config[k]?
     delete urls['config']
 
@@ -211,6 +222,7 @@ buildPage = ->
             img:    path.join('img', i.img)
             width:  args.tileWidth
             height: args.tileHeight
+            name:   u
             
         if has urls[u], 'break'
             t += "        div.break\n"
