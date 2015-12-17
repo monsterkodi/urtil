@@ -52,23 +52,23 @@ args = nomnom
          list: false
          default: 'index'
          required: false
-      inDir:      { abbr: 'i', default: '.', help: 'directory containing the config files'}
-      outDir:     { abbr: 'o', default: '.', help: 'directory where the generated tiles are stored'}     
-      tileWidth:  { abbr: 'W', default: defaultTileWidth, help: 'tile width'}
-      tileHeight: { abbr: 'H', default: defaultTileHeight, help: 'tile height'}
-      tileSize:   { abbr: 'S', help: 'shortcut to set tile width and height (square tiles)'}
-      screenHeight: { default: defaultScreenHeight, help: 'screen height'} 
-      bgColor:    { default: '#ddd', help: 'background color'} 
-      fgColor:    { default: '#000', help: 'text color'} 
-      timeout:    { abbr: 't', default: 60, help: 'maximal page retrieval time in seconds'}
-      view:       { abbr: 'v', default: true, toggle: true, help: 'open generated page'}
-      progress:   { abbr: 'p', default: true, toggle: true, help: 'display progress bar'}
-      delete:     { abbr: 'd', default: true, toggle: true, help: 'delete intermediate noon files'}
-      quiet:      { abbr: 'q', flag: true, help: 'less verbose console output'}
-      refresh:    { abbr: 'r', flag: true, help: 'force refresh of all tiles'}
-      norefresh:  { abbr: 'n', flag: true, help: 'disable refresh of all tiles'}
-      version:    { abbr: 'V', flag: true, help: 'output version', hidden: true }
-      uplink:     { abbr: 'U', default: '', help: 'link to level up', hidden: true }
+      inDir:        { abbr: 'i', default: '.',                  help: 'directory containing the config files'}
+      outDir:       { abbr: 'o', default: '.',                  help: 'directory where the generated tiles are stored'}     
+      tileWidth:    { abbr: 'W', default: defaultTileWidth,     help: 'tile width'}
+      tileHeight:   { abbr: 'H', default: defaultTileHeight,    help: 'tile height'}
+      tileSize:     { abbr: 'S',                                help: 'shortcut to set tile width and height (square tiles)'}
+      bgColor:      {            default: '#ddd',               help: 'background color'} 
+      fgColor:      {            default: '#000',               help: 'text color'} 
+      screenHeight: {            default: defaultScreenHeight,  help: 'screen height'} 
+      timeout:      { abbr: 't', default: 60,                   help: 'maximal page retrieval time in seconds'}
+      view:         { abbr: 'v', default: true, toggle: true,   help: 'open generated page'}
+      progress:     { abbr: 'p', default: true, toggle: true,   help: 'display progress bar'}
+      delete:       { abbr: 'd', default: true, toggle: true,   help: 'delete intermediate noon files'}
+      quiet:        { abbr: 'q', flag: true,                    help: 'less verbose console output'}
+      refresh:      { abbr: 'r', flag: true,                    help: 'force refresh of all tiles'}
+      norefresh:    { abbr: 'n', flag: true,                    help: 'disable refresh of all tiles'}
+      version:      { abbr: 'V', flag: true,                    help: 'output version', hidden: true }
+      uplink:       { abbr: 'U', default: '',                   help: 'link to level up', hidden: true }
    .parse()
 
 if args.version
@@ -93,6 +93,7 @@ if not fs.existsSync(sites) or fs.statSync(sites).isDirectory()
         sites = resolve "#{indir}/#{name}.#{ext}"
         if fs.existsSync sites
             break
+            
 sites = "#{indir}/#{name}.crypt" if not fs.existsSync sites
 if not fs.existsSync sites then err "config file with name #{chalk.yellow name} not found in #{chalk.yellow indir}!"
 
@@ -219,10 +220,10 @@ buildPage = ->
     for u,i of map
         t += _.template(tile)
             href:   i.href
-            img:    path.join('img', i.img)
+            img:    path.join 'img', i.img
             width:  args.tileWidth
             height: args.tileHeight
-            name:   u
+            name:   _.last u.split '/'
             
         if has urls[u], 'break'
             t += "        div.break\n"
