@@ -61,7 +61,6 @@ args = nomnom
       screenHeight: {            default: defaultScreenHeight,  help: 'screen height'} 
       timeout:      { abbr: 't', default: 60,                   help: 'maximal page retrieval time in seconds'}
       open:         { abbr: 'o', default: true, toggle: true,   help: 'open generated page'}
-      progress:     { abbr: 'p', default: true, toggle: true,   help: 'display status blocks'}
       clean:        { abbr: 'c', default: true, toggle: true,   help: 'delete intermediate noon files'}
       quiet:        { abbr: 'q', flag: true,                    help: 'less verbose console output'}
       verbose:      { abbr: 'v', flag: true,                    help: 'verbose console output'}
@@ -198,7 +197,7 @@ mkpath.sync img
 ###
 
 status = ->
-    
+    return if args.quiet
     process.stdout.clearLine()
     process.stdout.cursorTo 0
 
@@ -334,8 +333,8 @@ load = (u, cb) ->
             delete uc['screenHeight']
             sds.save "#{u}.noon", uc
             cmd = "#{process.argv[0]} #{process.argv[1]} -o false -U ./#{name}.html #{u}.noon"
-            if not args.progress then cmd += '-p 0'
             if args.verbose   then cmd += " -v"
+            if args.quiet   then cmd += " -q"
             if args.refresh then cmd += " -r"
             childp.execSync cmd,
                 cwd: process.cwd()
@@ -343,7 +342,7 @@ load = (u, cb) ->
                 stdio: 'inherit'
             if args.clean
                 rm.sync "#{u}.noon"
-            console.log ''
+            console.log '' if not args.quiet
 
         sh = has(urls[u], 'screenHeight') and urls[u].screenHeight or args.screenHeight
         
@@ -395,7 +394,7 @@ onLoaded = (u) ->
             log noon.stringify map, colors:true
         buildPage()
         status()
-        if args.uplink == ''
+        if args.uplink == '' and not args.quiet
             log ''
         process.exit 0
     else
@@ -407,8 +406,7 @@ else
     l = ( load(u, onLoaded) for u of urls )
 
 onTimeout = ->
-    if not args.quiet and args.progress
-        
+    if not args.quiet
         if args.verbose
             process.stdout.clearLine()
             process.stdout.cursorTo 0
