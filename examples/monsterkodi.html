@@ -12,30 +12,99 @@ a {
 #stage {
   text-align: center;
 }
-.site {
+span.site {
   margin: 20px;
   box-sizing: border-box;
   width: 300px;
   height: 300px;
   display: inline-block;
+  position: relative;
 }
-.site img {
+img.site {
   border-radius: 10px;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.2);
 }
-.site img:hover {
+img.site:hover {
   box-shadow: 3px 3px 6px 3px rgba(0,0,0,0.1);
 }
 .site.empty {
   background-color: transparent;
 }
+.site.name {
+  font-family: Verdana, Arial, sans-serif;
+  font-weight: bold;
+  color: #fff;
+  max-width: 300px;
+  width: 300px;
+  overflow: hidden;
+  display: none;
+  position: absolute;
+  top: -25px;
+  white-space: nowrap;
+  text-align: center;
+}
 </style>
+    <script>(function() {
+  var onClick, onMouseOut, onMouseOver, tileForElement,
+    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  tileForElement = function(e) {
+    if (e == null) {
+      return null;
+    }
+    if (indexOf.call(e.classList, 'tile') >= 0) {
+      return e;
+    } else {
+      return tileForElement(e.parentElement);
+    }
+  };
+
+  onClick = function(event) {
+    if (event.target.id === 'stage' || indexOf.call(event.target.classList, 'empty') >= 0) {
+      return window.location.href = "./example.html";
+    }
+  };
+
+  onMouseOver = function(event) {
+    var name, tile;
+    if (indexOf.call(event.target.classList, 'site') >= 0) {
+      tile = tileForElement(event.target);
+      name = tile != null ? tile.getElementsByClassName('name')[0] : void 0;
+      return name != null ? name.style.display = 'block' : void 0;
+    }
+  };
+
+  onMouseOut = function(event) {
+    var name, tile;
+    if (indexOf.call(event.target.classList, 'site') >= 0) {
+      tile = tileForElement(event.target);
+      name = tile != null ? tile.getElementsByClassName('name')[0] : void 0;
+      return name != null ? name.style.display = 'none' : void 0;
+    }
+  };
+
+  window.onload = function() {
+    document.addEventListener('click', onClick);
+    if ("./example.html".length) {
+      document.getElementById('stage').style.cursor = 'n-resize';
+    }
+    document.addEventListener('mouseover', onMouseOver);
+    return document.addEventListener('mouseout', onMouseOut);
+  };
+
+}).call(this);
+</script>
   </head>
 </html>
 <body>
-  <div id="stage"><span class="site"><a href="http://monsterkodi.net/"><img src="monsterkodi.net.png" width="300" height="300"/></a></span><span class="site"><a href="http://monsterkodi.github.io/"><img src="img/monsterkodi.github.io.png" width="300" height="300"/></a></span>
-    <div class="break"></div><span class="site"><a href="http://github.com/monsterkodi"><img src="img/github.com.monsterkodi.png" width="300" height="300"/></a></span><span class="site"><a href="http://npmjs.com/~monsterkodi"><img src="img/npmjs.com._monsterkodi.png" width="300" height="300"/></a></span>
-    <div class="break"></div><span class="site"><a href="./projects.html"><img src="img/projects.png" width="300" height="300"/></a></span>
+  <div id="stage"><span class="site tile">
+      <div class="site name">monsterkodi.net</div><a href="http://monsterkodi.net/" class="site link"><img src="monsterkodi.net.png" width="300" height="300" class="site image"/></a></span><span class="site tile">
+      <div class="site name">monsterkodi.github.io</div><a href="http://monsterkodi.github.io/" class="site link"><img src="img/monsterkodi.github.io.png" width="300" height="300" class="site image"/></a></span>
+    <div class="break"></div><span class="site tile">
+      <div class="site name">monsterkodi</div><a href="http://github.com/monsterkodi" class="site link"><img src="img/github.com.monsterkodi.png" width="300" height="300" class="site image"/></a></span><span class="site tile">
+      <div class="site name">~monsterkodi</div><a href="http://npmjs.com/~monsterkodi" class="site link"><img src="img/npmjs.com._monsterkodi.png" width="300" height="300" class="site image"/></a></span>
+    <div class="break"></div><span class="site tile">
+      <div class="site name">projects</div><a href="./projects.html" class="site link"><img src="img/projects.png" width="300" height="300" class="site image"/></a></span>
     <div class="break"></div>
   </div>
 </body>

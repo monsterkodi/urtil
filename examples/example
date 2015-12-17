@@ -1,4 +1,4 @@
-@                                               . bgColor   #555 . tileSize    300
+@                                               . bgColor   #555 . tileSize    300 . fgColor  #fff
 tiles                                           . html . refresh
     @                                           . tileWidth  300 . tileHeight  210 . bgColor  #7fc4d2
     github.com                                  . -
@@ -42,8 +42,8 @@ useless                                         . html . refresh . screenHeight 
     oct82.com                                         
     semanticresponsiveillustration.com              
                                                 -
-monsterkodi                                     . html . - . refresh
-    @                                           . bgColor  #444 . tileSize  300
+monsterkodi                                     . html . - . ! 
+    @                                           . bg  #444 . fg  #fff . tileSize  300 
     monsterkodi.net
                                                 image   ../monsterkodi.net.png
     monsterkodi.github.io
@@ -51,8 +51,8 @@ monsterkodi                                     . html . - . refresh
     github.com/monsterkodi
     npmjs.com/~monsterkodi
                                                 -
-    projects                                    . html . - . screenHeight  960 . refresh
-        @                                       . bgColor  #333 . tileSize   250
+    projects                                    . html . - . screenHeight  960 . !
+        @                                       . bg  #333 . fg  white . tileSize   250
 
         monsterkodi.github.io/urtil
         monsterkodi.github.io/password-turtle
