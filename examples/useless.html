@@ -1,4 +1,5 @@
 
+<meta charset="UTF-8"/>
 <html>
   <head>
     <title>useless</title>
@@ -43,9 +44,12 @@ img.site:hover {
   white-space: nowrap;
   text-align: center;
 }
+*:focus {
+  border-bottom: 3px solid #000;
+}
 </style>
     <script>(function() {
-  var onClick, onMouseOut, onMouseOver, tileForElement,
+  var down, onClick, onKeyDown, onMouseOut, onMouseOver, select, tab, tileForElement, tiles, up,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   tileForElement = function(e) {
@@ -83,13 +87,101 @@ img.site:hover {
     }
   };
 
+  tiles = function() {
+    return [].slice.call(document.body.getElementsByClassName('site tile'));
+  };
+
+  select = function(t) {
+    var list;
+    list = document.body.getElementsByClassName('site link');
+    return list[t].focus();
+  };
+
+  tab = function(d) {
+    var list, tile, tileIndex;
+    tile = tileForElement(document.activeElement);
+    list = tiles();
+    tileIndex = list.indexOf(tile);
+    return select((list.length + tileIndex + d) % list.length);
+  };
+
+  down = function() {
+    var i, list, ntr, ref, ref1, ref2, ref3, t, tile, tileIndex, tr, tt, ttr;
+    tile = tileForElement(document.activeElement);
+    if (tile == null) {
+      select(0);
+      return;
+    }
+    list = tiles();
+    tileIndex = list.indexOf(tile);
+    tr = tile.getBoundingClientRect();
+    for (t = i = ref = tileIndex + 1, ref1 = list.length; ref <= ref1 ? i < ref1 : i > ref1; t = ref <= ref1 ? ++i : --i) {
+      if (t >= list.length) {
+        return;
+      }
+      tt = list[t];
+      ttr = tt.getBoundingClientRect();
+      if (ttr.top > tr.top) {
+        ntr = (ref2 = list[t + 1]) != null ? ref2.getBoundingClientRect() : void 0;
+        while ((ntr != null) && ntr.top === ttr.top && ntr.left <= tr.left) {
+          t += 1;
+          ntr = (ref3 = list[t + 1]) != null ? ref3.getBoundingClientRect() : void 0;
+        }
+        select(t);
+        return;
+      }
+    }
+  };
+
+  up = function() {
+    var i, list, ntr, ref, ref1, ref2, t, tile, tileIndex, tr, tt, ttr;
+    tile = tileForElement(document.activeElement);
+    if (tile == null) {
+      select(0);
+      return;
+    }
+    list = tiles();
+    tileIndex = list.indexOf(tile);
+    tr = tile.getBoundingClientRect();
+    for (t = i = ref = tileIndex - 1; ref <= 0 ? i <= 0 : i >= 0; t = ref <= 0 ? ++i : --i) {
+      if (t < 0) {
+        return;
+      }
+      tt = list[t];
+      ttr = tt.getBoundingClientRect();
+      if (ttr.top < tr.top) {
+        ntr = (ref1 = list[t - 1]) != null ? ref1.getBoundingClientRect() : void 0;
+        while ((ntr != null) && ntr.top === ttr.top && ntr.right >= tr.right) {
+          t -= 1;
+          ntr = (ref2 = list[t - 1]) != null ? ref2.getBoundingClientRect() : void 0;
+        }
+        select(t);
+        return;
+      }
+    }
+  };
+
+  onKeyDown = function(event) {
+    switch (event.keyCode) {
+      case 38:
+        return up();
+      case 37:
+        return tab(-1);
+      case 39:
+        return tab(1);
+      case 40:
+        return down();
+    }
+  };
+
   window.onload = function() {
     document.addEventListener('click', onClick);
     if ("./example.html".length) {
       document.getElementById('stage').style.cursor = 'n-resize';
     }
     document.addEventListener('mouseover', onMouseOver);
-    return document.addEventListener('mouseout', onMouseOut);
+    document.addEventListener('mouseout', onMouseOut);
+    return document.addEventListener('keydown', onKeyDown);
   };
 
 }).call(this);
