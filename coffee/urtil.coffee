@@ -22,7 +22,6 @@ _        = require 'lodash'
 mkpath   = require 'mkpath'
 webshot  = require 'webshot'
 process  = require 'process'
-progress = require 'progress2'
 childp   = require 'child_process'
 coffee   = require 'coffee-script'
 resolve  = require './tools/resolve'
@@ -53,7 +52,7 @@ args = nomnom
          default: 'index'
          required: false
       inDir:        { abbr: 'i', default: '.',                  help: 'directory containing the config files'}
-      outDir:       { abbr: 'o', default: '.',                  help: 'directory where the generated tiles are stored'}     
+      outDir:       { abbr: 'd', default: '.',                  help: 'directory where the generated tiles are stored'}     
       tileWidth:    { abbr: 'W', default: defaultTileWidth,     help: 'tile width'}
       tileHeight:   { abbr: 'H', default: defaultTileHeight,    help: 'tile height'}
       tileSize:     { abbr: 'S',                                help: 'shortcut to set tile width and height (square tiles)'}
@@ -61,10 +60,11 @@ args = nomnom
       fgColor:      {            default: '#000',               help: 'text color'} 
       screenHeight: {            default: defaultScreenHeight,  help: 'screen height'} 
       timeout:      { abbr: 't', default: 60,                   help: 'maximal page retrieval time in seconds'}
-      view:         { abbr: 'v', default: true, toggle: true,   help: 'open generated page'}
-      progress:     { abbr: 'p', default: true, toggle: true,   help: 'display progress bar'}
-      delete:       { abbr: 'd', default: true, toggle: true,   help: 'delete intermediate noon files'}
+      open:         { abbr: 'o', default: true, toggle: true,   help: 'open generated page'}
+      progress:     { abbr: 'p', default: true, toggle: true,   help: 'display status blocks'}
+      clean:        { abbr: 'c', default: true, toggle: true,   help: 'delete intermediate noon files'}
       quiet:        { abbr: 'q', flag: true,                    help: 'less verbose console output'}
+      verbose:      { abbr: 'v', flag: true,                    help: 'verbose console output'}
       refresh:      { abbr: 'r', flag: true,                    help: 'force refresh of all tiles'}
       norefresh:    { abbr: 'n', flag: true,                    help: 'disable refresh of all tiles'}
       version:      { abbr: 'V', flag: true,                    help: 'output version', hidden: true }
@@ -190,20 +190,38 @@ script = coffee.compile coff
 mkpath.sync img
 
 ###
-0000000     0000000   00000000 
-000   000  000   000  000   000
-0000000    000000000  0000000  
-000   000  000   000  000   000
-0000000    000   000  000   000
+ 0000000  000000000   0000000   000000000  000   000   0000000
+000          000     000   000     000     000   000  000     
+0000000      000     000000000     000     000   000  0000000 
+     000     000     000   000     000     000   000       000
+0000000      000     000   000     000      0000000   0000000 
 ###
 
-if not _.isEmpty(urls) and args.progress
-    bar = new progress ":bar :current"+chalk.gray("/#{_.size urls}"),
-        complete: chalk.bold.blue '█'
-        incomplete: chalk.gray '█'
-        width: 48
-        total: _.size urls
-    bar.tick 0
+status = ->
+    
+    process.stdout.clearLine()
+    process.stdout.cursorTo 0
+
+    s = _.map urls, (v,u) -> 
+        if not map[u]?.status? then chalk.gray '██'
+        else if map[u].fixed then chalk.bold.yellow '██'
+        else if map[u].cached then chalk.magenta '██'
+        else if 'ok' == chalk.stripColor(map[u].status) 
+            if map[u].local
+                chalk.bold.white '██'
+            else
+                chalk.bold.green '██'
+        else
+            chalk.red.blue '██'
+            
+    s = '  ' + s.join ''
+    c = process.stdout.getWindowSize()[0]
+    while chalk.stripColor(s).length >= c
+        s = s.substr 0, s.length-2
+    console.log s
+
+    process.stdout.cursorTo 0
+    process.stdout.moveCursor 0, -1
 
 ###
 0000000    000   000  000  000      0000000   
@@ -241,7 +259,7 @@ buildPage = ->
                 
     fs.writeFileSync html, r
     
-    open html if args.view
+    open html if args.open
 
 ###
 000       0000000    0000000   0000000  
@@ -264,6 +282,7 @@ load = (u, cb) ->
     r = url.parse us
 
     map[u] = href: (local and "./#{u}.html" or r.href)
+    map[u].local = true if local
     
     if has urls[u], 'image'
         f = urls[u].image
@@ -286,9 +305,10 @@ load = (u, cb) ->
     fexists = fs.existsSync f
 
     if fexists and not refresh 
-        bar?.tick 1
+
         map[u].cached = true
         map[u].status = chalk.green 'ok'
+        
         cb u
     else
         if fexists
@@ -313,16 +333,17 @@ load = (u, cb) ->
             delete uc['tileHeight']
             delete uc['screenHeight']
             sds.save "#{u}.noon", uc
-            cmd = "#{process.argv[0]} #{process.argv[1]} -v 0 -U ./#{name}.html #{u}.noon"
+            cmd = "#{process.argv[0]} #{process.argv[1]} -o false -U ./#{name}.html #{u}.noon"
             if not args.progress then cmd += '-p 0'
-            if args.quiet   then cmd += " -q"
+            if args.verbose   then cmd += " -v"
             if args.refresh then cmd += " -r"
             childp.execSync cmd,
                 cwd: process.cwd()
                 encoding: 'utf8'
                 stdio: 'inherit'
-            if args.delete
+            if args.clean
                 rm.sync "#{u}.noon"
+            console.log ''
 
         sh = has(urls[u], 'screenHeight') and urls[u].screenHeight or args.screenHeight
         
@@ -336,11 +357,11 @@ load = (u, cb) ->
             defaultWhiteBackground: true
             
         webshot us, f, o, (e) =>
-            bar?.tick 1
             if e  
                 map[u].status = chalk.red 'failed'
             else
                 map[u].status = chalk.green 'ok'
+                
             cb u
 
 ###
@@ -367,11 +388,18 @@ onLoaded = (u) ->
         if fs.existsSync c
             fs.renameSync c, f
     if numLoaded == _.size urls
-        if not args.quiet
-            log ''
+        if not args.quiet and args.verbose
+            process.stdout.clearLine()
+            process.stdout.cursorTo 0
+            process.stdout.moveCursor 0, -1
             log noon.stringify map, colors:true
         buildPage()
+        status()
+        if args.uplink == ''
+            log ''
         process.exit 0
+    else
+        status()
 
 if _.isArray urls
     l = ( load(u, onLoaded) for u in urls )
@@ -380,9 +408,22 @@ else
 
 onTimeout = ->
     if not args.quiet and args.progress
-        process.stdout.clearLine()
-        process.stdout.cursorTo 0
+        
+        if args.verbose
+            process.stdout.clearLine()
+            process.stdout.cursorTo 0
+            process.stdout.moveCursor 0, -1
+            log noon.stringify map, colors:true
+        else
+            process.stdout.clearLine()
+            process.stdout.cursorTo 0
+            process.stdout.moveCursor 0, -1
         log chalk.bold.yellow.bgRed '       timeout       '
+        if args.uplink != ''
+            buildPage()
+        status()
+        if args.uplink == ''
+            log ''
     process.exit 0
 
 setTimeout onTimeout, args.timeout * 1000

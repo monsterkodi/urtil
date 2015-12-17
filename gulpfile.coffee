@@ -40,7 +40,7 @@ gulp.task 'bump', ->
         .pipe bump()
         .pipe gulp.dest '.'
         
-gulp.task 'build', ['clean', 'coffee'], ->
+gulp.task 'build', ['clean', 'coffee_release'], ->
 gulp.task 'release', ['clean', 'coffee_release'], ->
         
 gulp.task 'clean', (c) ->
