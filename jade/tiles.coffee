@@ -22,6 +22,73 @@ onMouseOut = (event) ->
         name = tile?.getElementsByClassName('name')[0]
         name?.style.display = 'none'
 
+tiles = -> [].slice.call document.body.getElementsByClassName('site tile')
+
+select = (t) ->
+    list = document.body.getElementsByClassName('site link')
+    list[t].focus()
+
+tab = (d) ->
+    tile = tileForElement document.activeElement
+    list = tiles()
+    tileIndex = list.indexOf tile
+    select (list.length+tileIndex+d) % list.length
+        
+down = ->
+    tile = tileForElement document.activeElement
+    if not tile?
+        select 0
+        return
+
+    list = tiles()
+    tileIndex = list.indexOf tile
+    tr = tile.getBoundingClientRect()
+    
+    for t in [tileIndex+1...list.length]
+        return if t >= list.length
+        tt = list[t]
+        ttr = tt.getBoundingClientRect()
+        if ttr.top > tr.top
+            ntr = list[t+1]?.getBoundingClientRect()
+            while ntr? and ntr.top == ttr.top and ntr.left <= tr.left
+                t += 1
+                ntr = list[t+1]?.getBoundingClientRect()
+            select t
+            return
+
+up = ->
+    tile = tileForElement document.activeElement
+    if not tile?
+        select 0
+        return
+
+    list = tiles()
+    tileIndex = list.indexOf tile
+    tr = tile.getBoundingClientRect()
+
+    for t in [(tileIndex-1)..0]
+        return if t < 0
+        tt = list[t]
+        ttr = tt.getBoundingClientRect()
+        if ttr.top < tr.top
+            ntr = list[t-1]?.getBoundingClientRect()
+            while ntr? and ntr.top == ttr.top and ntr.right >= tr.right
+                t -= 1
+                ntr = list[t-1]?.getBoundingClientRect()
+            select t
+            return
+
+onKeyDown = (event) ->
+    switch event.keyCode
+        when 38
+            up()
+        when 37
+            tab -1
+        when 39
+            tab 1
+        when 40
+            down()
+
 window.onload = () ->
     document.addEventListener 'click', onClick
     if "<%= uplink %>".length
@@ -29,3 +96,4 @@ window.onload = () ->
         
     document.addEventListener 'mouseover', onMouseOver
     document.addEventListener 'mouseout',  onMouseOut
+    document.addEventListener 'keydown',   onKeyDown
