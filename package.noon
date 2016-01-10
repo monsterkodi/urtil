@@ -3,7 +3,7 @@ description     makes url tiles
 repository      
                 type    git
                 url     git://github.com/monsterkodi/urtil
-version         0.4.3
+version         0.4.4
 main            index.js
 author          monsterkodi
 license         Unlicense
