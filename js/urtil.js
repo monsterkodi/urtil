@@ -8,7 +8,7 @@
  */
 
 (function() {
-  var _, args, buildPage, chalk, childp, coff, coffee, colors, css, defaultScreenHeight, defaultTileHeight, defaultTileWidth, del, err, ext, fs, has, html, img, indir, j, jade, k, l, len, len1, load, log, m, map, mkpath, name, nomnom, noon, numLoaded, onLoaded, onTimeout, open, outdir, path, process, ref, ref1, resolve, rm, script, sds, set, sites, status, styl, stylus, swapAlias, tile, tiles, u, url, urls, webshot,
+  var _, args, buildPage, childp, coff, coffee, colors, css, defaultScreenHeight, defaultTileHeight, defaultTileWidth, del, err, ext, fs, has, html, img, indir, j, jade, k, l, len, len1, load, log, m, map, mkpath, name, noon, numLoaded, onLoaded, onTimeout, open, outdir, path, process, ref, ref1, resolve, rm, script, sds, set, sites, status, styl, stylus, swapAlias, tile, tiles, u, url, urls, webshot,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   fs = require('fs');
@@ -28,10 +28,6 @@
   path = require('path');
 
   colors = require('colors');
-
-  chalk = require('chalk');
-
-  nomnom = require('nomnom');
 
   stylus = require('stylus');
 
