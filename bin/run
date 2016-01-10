@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-DIR="`dirname $0`/.."
-# echo $DIR
-gulp --cwd "$DIR" build
-"$DIR/bin/`sds $DIR/package.json -rp name`" $@

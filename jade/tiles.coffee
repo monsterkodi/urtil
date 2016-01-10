@@ -97,3 +97,4 @@ window.onload = () ->
     document.addEventListener 'mouseover', onMouseOver
     document.addEventListener 'mouseout',  onMouseOut
     document.addEventListener 'keydown',   onKeyDown
+    select 0

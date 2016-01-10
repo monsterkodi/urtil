@@ -1,4 +1,3 @@
-
 ###
 000   000  00000000   000000000  000  000    
 000   000  000   000     000     000  000    
@@ -15,6 +14,7 @@ open     = require 'opn'
 jade     = require 'jade'
 noon     = require 'noon'
 path     = require 'path'
+colors   = require 'colors'
 chalk    = require 'chalk'
 nomnom   = require 'nomnom'
 stylus   = require 'stylus'
@@ -24,10 +24,16 @@ webshot  = require 'webshot'
 process  = require 'process'
 childp   = require 'child_process'
 coffee   = require 'coffee-script'
-resolve  = require './tools/resolve'
-log      = require './tools/log'
-err      = () -> 
-    log chalk.bold.red [].slice.call(arguments).join ' '
+
+resolve = (unresolved) ->
+    p = unresolved.replace /\~/, process.env.HOME
+    p = path.resolve p
+    p = path.normalize p
+    p
+
+log = console.log
+err = () -> 
+    log colors.bold.red [].slice.call(arguments).join ' '
     process.exit()
 
 defaultTileWidth = 240
@@ -35,44 +41,35 @@ defaultTileHeight = 160
 defaultScreenHeight = 1100
 
 ###
-000   000   0000000   00     00
-0000  000  000   000  000   000
-000 0 000  000   000  000000000
-000  0000  000   000  000 0 000
-000   000   0000000   000   000
+000   000   0000000   00000000    0000000 
+000  000   000   000  000   000  000      
+0000000    000000000  0000000    000  0000
+000  000   000   000  000   000  000   000
+000   000  000   000  000   000   0000000 
 ###
 
-args = nomnom
-   .script 'urtil'
-   .options
-      name:
-         position: 0
-         help: 'the name of the config file'
-         list: false
-         default: 'index'
-         required: false
-      inDir:        { abbr: 'i', default: '.',                  help: 'directory containing the config files'}
-      outDir:       { abbr: 'd', default: '.',                  help: 'directory where the generated tiles are stored'}     
-      tileWidth:    { abbr: 'W', default: defaultTileWidth,     help: 'tile width'}
-      tileHeight:   { abbr: 'H', default: defaultTileHeight,    help: 'tile height'}
-      tileSize:     { abbr: 'S',                                help: 'shortcut to set tile width and height (square tiles)'}
-      bgColor:      {            default: '#ddd',               help: 'background color'} 
-      fgColor:      {            default: '#000',               help: 'text color'} 
-      screenHeight: {            default: defaultScreenHeight,  help: 'screen height'} 
-      timeout:      { abbr: 't', default: 60,                   help: 'maximal page retrieval time in seconds'}
-      open:         { abbr: 'o', default: true, toggle: true,   help: 'open generated page'}
-      clean:        { abbr: 'c', default: true, toggle: true,   help: 'delete intermediate noon files'}
-      quiet:        { abbr: 'q', flag: true,                    help: 'less verbose console output'}
-      verbose:      { abbr: 'v', flag: true,                    help: 'verbose console output'}
-      refresh:      { abbr: 'r', flag: true,                    help: 'force refresh of all tiles'}
-      norefresh:    { abbr: 'n', flag: true,                    help: 'disable refresh of all tiles'}
-      version:      { abbr: 'V', flag: true,                    help: 'output version', hidden: true }
-      uplink:       { abbr: 'U', default: '',                   help: 'link to level up', hidden: true }
-   .parse()
-
-if args.version
-    log require("#{__dirname}/../package.json").version
-    process.exit()
+args = require('karg') """
+urtil
+      name               . ? the name of the config file   . * . = index
+      inDir              . ? location of the config files      . = .                 
+      outDir             . ? location of result files          . = .                 
+      tileWidth    . - W . ? tile width                        . = #{defaultTileWidth}
+      tileHeight   . - H . ? tile height                       . = #{defaultTileHeight}
+      tileSize     . - S . ? square tiles                   
+      bgColor            . ? background color                  . = #ddd
+      fgColor            . ? text color                        . = #000
+      screenHeight       . ? screen height                     . = #{defaultScreenHeight}
+      timeout            . ? maximal page retrieval time       . = 60
+      open         . - O . ? open generated page               . = true
+      clean              . ? delete intermediate noon files    . = true
+      quiet              . ? less verbose console output       . = false     
+      verbose            . ? verbose console output            . = false
+      refresh            . ? force refresh of all tiles        . = false    
+      norefresh          . ? disable refresh of all tiles      . = false      
+      uplink       . - U . = ||
+      
+version  #{require("#{__dirname}/../package.json").version}
+"""
 
 ###
 000  000   000  000  000000000
@@ -94,7 +91,7 @@ if not fs.existsSync(sites) or fs.statSync(sites).isDirectory()
             break
             
 sites = "#{indir}/#{name}.crypt" if not fs.existsSync sites
-if not fs.existsSync sites then err "config file with name #{chalk.yellow name} not found in #{chalk.yellow indir}!"
+if not fs.existsSync sites then err "config file with name #{name.yellow} not found in #{indir.yellow}!"
 
 urls = sds.load sites
 
@@ -174,7 +171,7 @@ load = (f) ->
     try
         return fs.readFileSync f, encoding: 'utf8'        
     catch e
-        err "can't read file", chalk.yellow f, chalk.magenta e
+        err "can't read file", f.yellow, e.magenta
         process.exit -1
 
 tiles  = load path.join __dirname, '../jade/tiles.jade'
@@ -202,22 +199,22 @@ status = ->
     process.stdout.cursorTo 0
 
     s = _.map urls, (v,u) -> 
-        if not map[u]?.status? then chalk.gray '██'
-        else if map[u].fixed then chalk.bold.yellow '██'
-        else if map[u].cached then chalk.magenta '██'
-        else if 'ok' == chalk.stripColor(map[u].status) 
+        if not map[u]?.status? then '██'.gray
+        else if map[u].fixed then '██'.bold.yellow
+        else if map[u].cached then '██'.magenta
+        else if 'ok' == map[u].status.strip 
             if map[u].local
-                chalk.bold.white '██'
+                '██'.bold.white
             else
-                chalk.bold.green '██'
+                '██'.bold.green
         else
-            chalk.red.blue '██'
+            '██'.bold.blue
             
     s = '  ' + s.join ''
     c = process.stdout.getWindowSize()[0]
-    while chalk.stripColor(s).length >= c
+    while s.strip.length >= c
         s = s.substr 0, s.length-2
-    console.log s
+    log s
 
     process.stdout.cursorTo 0
     process.stdout.moveCursor 0, -1
@@ -306,7 +303,7 @@ load = (u, cb) ->
     if fexists and not refresh 
 
         map[u].cached = true
-        map[u].status = chalk.green 'ok'
+        map[u].status = 'ok'.green
         
         cb u
     else
@@ -332,7 +329,7 @@ load = (u, cb) ->
             delete uc['tileHeight']
             delete uc['screenHeight']
             sds.save "#{u}.noon", uc
-            cmd = "#{process.argv[0]} #{process.argv[1]} -o false -U ./#{name}.html #{u}.noon"
+            cmd = "#{process.argv[0]} #{process.argv[1]} -O -U ./#{name}.html #{u}.noon"
             if args.verbose   then cmd += " -v"
             if args.quiet   then cmd += " -q"
             if args.refresh then cmd += " -r"
@@ -342,7 +339,7 @@ load = (u, cb) ->
                 stdio: 'inherit'
             if args.clean
                 rm.sync "#{u}.noon"
-            console.log '' if not args.quiet
+            log '' if not args.quiet
 
         sh = has(urls[u], 'screenHeight') and urls[u].screenHeight or args.screenHeight
         
@@ -357,9 +354,9 @@ load = (u, cb) ->
             
         webshot us, f, o, (e) =>
             if e  
-                map[u].status = chalk.red 'failed'
+                map[u].status = 'failed'.red
             else
-                map[u].status = chalk.green 'ok'
+                map[u].status = 'ok'.green
                 
             cb u
 
@@ -382,8 +379,8 @@ onLoaded = (u) ->
     f = path.join img, i.img
     c = path.join img, "."+i.img
     if not i.status?
-        i.status = chalk.red 'timeout'
-    if 'ok' != chalk.stripColor i.status
+        i.status = 'timeout'.red
+    if 'ok' != i.status.strip
         if fs.existsSync c
             fs.renameSync c, f
     if numLoaded == _.size urls
@@ -416,7 +413,7 @@ onTimeout = ->
             process.stdout.clearLine()
             process.stdout.cursorTo 0
             process.stdout.moveCursor 0, -1
-        log chalk.bold.yellow.bgRed '       timeout       '
+        log '       timeout       '.bold.yellow.bgRed
         if args.uplink != ''
             buildPage()
         status()
