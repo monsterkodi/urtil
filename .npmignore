@@ -1,8 +1,6 @@
-bin/publish
 Icon?
 coffee
 web
 .gitignore
-.npmignore
 *.log
 package.noon
