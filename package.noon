@@ -25,12 +25,12 @@ dependencies
                 colors          ^1.1.2
                 del             ^2.2.0
                 jade            ^1.11.0
-                karg            >=0.1.8
-                lodash          ^3.10.1
+                karg            >=0.1.19
+                lodash          ^4.0.0
                 mkpath          ^1.0.0
-                noon            >=0.6.11
-                opn             ^3.0.3
+                noon            >=0.7.2
+                opn             ^4.0.0
                 progress2       ^0.1.1
-                sds             >=1.4.12
+                sds             >=1.4.21
                 stylus          ^0.53.0
                 webshot         ^0.17.0
