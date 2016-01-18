@@ -181,7 +181,8 @@ img.site:hover {
     }
     document.addEventListener('mouseover', onMouseOver);
     document.addEventListener('mouseout', onMouseOut);
-    return document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return select(0);
   };
 
 }).call(this);

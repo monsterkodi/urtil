@@ -1,6 +1,6 @@
-@                                               . bgColor   #555 . tileSize    300 . fgColor  #fff
+@                                               . bgColor #555 . ts 300 . fg #fff
 tiles                                           . html . refresh
-    @                                           . tileWidth  300 . tileHeight  210 . bgColor  #7fc4d2
+    @                                           . tileWidth 300 . th 210 . bg #7fc4d2
     github.com                                  . -
     atom.io
     electron.atom.io                            . -
@@ -10,9 +10,8 @@ tiles                                           . html . refresh
     gruntjs.com                                 . -
     
 
-useless                                         . html . refresh . screenHeight  1050
-    @                                           . bgColor  #cf4646
-    heeeeeeeey.com                                    
+useless                                         
+    heeeeeeeey.com                              
     thatsthefinger.com                                
     eelslap.com                                       
     www.staggeringbeauty.com                          
@@ -42,8 +41,7 @@ useless                                         . html . refresh . screenHeight 
     oct82.com                                         
     semanticresponsiveillustration.com              
                                                 -
-monsterkodi                                     . html . - . ! 
-    @                                           . bg  #444 . fg  #fff . tileSize  300 
+monsterkodi                                     . html . - . refresh . config .. bg #444 .. fg  #fff .. ts  300
     monsterkodi.net
                                                 image   ../monsterkodi.net.png
     monsterkodi.github.io
@@ -51,8 +49,8 @@ monsterkodi                                     . html . - . !
     github.com/monsterkodi
     npmjs.com/~monsterkodi
                                                 -
-    projects                                    . html . - . screenHeight  960 . !
-        @                                       . bg  #333 . fg  white . tileSize   250
+    projects                                    . html . - . sh  960 . !
+        @                                       . bg #333 . fg  white . ts 250
 
         monsterkodi.github.io/urtil
         monsterkodi.github.io/password-turtle
