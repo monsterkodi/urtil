@@ -14,13 +14,18 @@ onMouseOver = (event) ->
     if 'site' in event.target.classList 
         tile = tileForElement event.target
         name = tile?.getElementsByClassName('name')[0]
-        name?.style.display = 'block'
+        overStyle = "unset"
+        overStyle = "none" if "off" in name.classList
+        name?.style.display = overStyle
 
 onMouseOut = (event) ->
     if 'site' in event.target.classList 
         tile = tileForElement event.target
         name = tile?.getElementsByClassName('name')[0]
-        name?.style.display = 'none'
+        outStyle = "none"
+        outStyle = "unset" if "on" in name.classList
+        console.log name.classList
+        name?.style.display = outStyle
 
 tiles = -> [].slice.call document.body.getElementsByClassName('site tile')
 

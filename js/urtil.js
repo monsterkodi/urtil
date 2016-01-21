@@ -8,7 +8,7 @@
  */
 
 (function() {
-  var _, args, buildPage, childp, coff, coffee, colors, css, defaultScreenHeight, defaultTileHeight, defaultTileWidth, del, err, ext, fs, has, html, img, indir, j, jade, k, l, len, len1, load, log, m, map, mkpath, name, noon, numLoaded, onLoaded, onTimeout, open, outdir, path, process, ref, ref1, resolve, rm, script, sds, set, sites, status, styl, stylus, swapAlias, tile, tiles, u, url, urls, webshot,
+  var _, args, buildPage, childp, coff, coffee, colors, css, defaultScreenHeight, defaultTileHeight, defaultTileWidth, del, err, ext, fs, has, html, img, indir, j, jade, k, l, len, len1, load, log, m, map, mkpath, name, noon, numLoaded, onLoaded, onTimeout, open, outdir, path, process, ref, ref1, resolve, rm, script, sds, set, sites, status, styl, stylus, swapAlias, tile, tiles, u, url, urls, v, webshot,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   fs = require('fs');
@@ -185,7 +185,7 @@
   swapAlias(urls);
 
   if (urls.config != null) {
-    ref1 = ['tileWidth', 'tileHeight', 'tileSize', 'bgColor', 'fgColor'];
+    ref1 = ['tileWidth', 'tileHeight', 'tileSize', 'bgColor', 'fgColor', 'title'];
     for (m = 0, len1 = ref1.length; m < len1; m++) {
       k = ref1[m];
       if (urls.config[k] != null) {
@@ -295,17 +295,24 @@
    */
 
   buildPage = function() {
-    var breakLast, h, i, n, r, t, u;
+    var breakLast, h, i, n, r, ref2, t, title, titleClass, u;
     t = tiles;
     breakLast = false;
     for (u in map) {
       i = map[u];
+      title = _.last(u.split('/'));
+      if (_.isString(i.value)) {
+        title = i.value;
+      }
+      titleClass = (ref2 = args.title) != null ? ref2 : 'over';
+      console.log(u, titleClass);
       t += _.template(tile)({
         href: i.href,
         img: path.join('img', i.img),
         width: args.tileWidth,
         height: args.tileHeight,
-        name: _.last(u.split('/'))
+        name: title,
+        titleClass: titleClass
       });
       if (has(urls[u], 'break')) {
         t += "        div.break\n";
@@ -342,7 +349,7 @@
   0000000   0000000   000   000  0000000
    */
 
-  load = function(u, cb) {
+  load = function(u, cb, v) {
     var cmd, f, fexists, local, o, p, r, refresh, sh, uc, us;
     local = u.indexOf('.') === -1;
     if (local) {
@@ -359,6 +366,8 @@
     if (local) {
       map[u].local = true;
     }
+    map[u].value = v;
+    map[u];
     if (has(urls[u], 'image')) {
       f = urls[u].image;
       map[u].fixed = true;
@@ -518,7 +527,8 @@
       var results;
       results = [];
       for (u in urls) {
-        results.push(load(u, onLoaded));
+        v = urls[u];
+        results.push(load(u, onLoaded, v));
       }
       return results;
     })();

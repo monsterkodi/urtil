@@ -150,7 +150,7 @@ swapAlias = (ul) ->
 swapAlias urls
     
 if urls.config?
-    for k in ['tileWidth', 'tileHeight', 'tileSize', 'bgColor', 'fgColor']
+    for k in ['tileWidth', 'tileHeight', 'tileSize', 'bgColor', 'fgColor', 'title']
         args[k] = urls.config[k] if urls.config[k]?
     delete urls['config']
 
@@ -230,12 +230,18 @@ buildPage = ->
     t = tiles
     breakLast = false
     for u,i of map
+        # log u, i.value
+        title = _.last u.split '/'
+        title = i.value if _.isString i.value
+        titleClass = args.title ? 'over'
+        console.log u, titleClass
         t += _.template(tile)
-            href:   i.href
-            img:    path.join 'img', i.img
-            width:  args.tileWidth
-            height: args.tileHeight
-            name:   _.last u.split '/'
+            href:       i.href
+            img:        path.join 'img', i.img
+            width:      args.tileWidth
+            height:     args.tileHeight
+            name:       title
+            titleClass: titleClass
             
         if has urls[u], 'break'
             t += "        div.break\n"
@@ -263,7 +269,7 @@ buildPage = ->
 0000000   0000000   000   000  0000000  
 ###
 
-load = (u, cb) ->
+load = (u, cb, v) ->
     
     local = u.indexOf('.') == -1
     if local
@@ -277,6 +283,8 @@ load = (u, cb) ->
 
     map[u] = href: (local and "./#{u}.html" or r.href)
     map[u].local = true if local
+    map[u].value = v
+    map[u]
     
     if has urls[u], 'image'
         f = urls[u].image
@@ -398,7 +406,7 @@ onLoaded = (u) ->
 if _.isArray urls
     l = ( load(u, onLoaded) for u in urls )
 else
-    l = ( load(u, onLoaded) for u of urls )
+    l = ( load(u, onLoaded, v) for u,v of urls )
 
 onTimeout = ->
     if not args.quiet
