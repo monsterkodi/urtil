@@ -41,7 +41,8 @@ useless
     oct82.com                                         
     semanticresponsiveillustration.com              
                                                 -
-monsterkodi                                     . html . - . refresh . config .. bg #444 .. fg  #fff .. ts  300 . title off
+monsterkodi                                     . html . - . refresh . 
+    @                                           . bg #444 . fg #fff . ts 300 . title off
     monsterkodi.net
                                                 image   ../monsterkodi.net.png
     monsterkodi.github.io

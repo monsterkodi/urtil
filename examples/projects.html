@@ -44,6 +44,9 @@ img.site:hover {
   white-space: nowrap;
   text-align: center;
 }
+.site.name.on {
+  display: unset;
+}
 *:focus {
   border-bottom: 3px solid #fff;
 }
@@ -70,20 +73,29 @@ img.site:hover {
   };
 
   onMouseOver = function(event) {
-    var name, tile;
+    var name, overStyle, tile;
     if (indexOf.call(event.target.classList, 'site') >= 0) {
       tile = tileForElement(event.target);
       name = tile != null ? tile.getElementsByClassName('name')[0] : void 0;
-      return name != null ? name.style.display = 'block' : void 0;
+      overStyle = "unset";
+      if (indexOf.call(name.classList, "off") >= 0) {
+        overStyle = "none";
+      }
+      return name != null ? name.style.display = overStyle : void 0;
     }
   };
 
   onMouseOut = function(event) {
-    var name, tile;
+    var name, outStyle, tile;
     if (indexOf.call(event.target.classList, 'site') >= 0) {
       tile = tileForElement(event.target);
       name = tile != null ? tile.getElementsByClassName('name')[0] : void 0;
-      return name != null ? name.style.display = 'none' : void 0;
+      outStyle = "none";
+      if (indexOf.call(name.classList, "on") >= 0) {
+        outStyle = "unset";
+      }
+      console.log(name.classList);
+      return name != null ? name.style.display = outStyle : void 0;
     }
   };
 
@@ -191,15 +203,17 @@ img.site:hover {
 </html>
 <body>
   <div id="stage"><span class="site tile">
-      <div class="site name">urtil</div><a href="http://monsterkodi.github.io/urtil" class="site link"><img src="img/monsterkodi.github.io.urtil.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
-      <div class="site name">password-turtle</div><a href="http://monsterkodi.github.io/password-turtle" class="site link"><img src="img/monsterkodi.github.io.password-turtle.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
-      <div class="site name">knix</div><a href="http://monsterkodi.github.io/knix" class="site link"><img src="img/monsterkodi.github.io.knix.png" width="250" height="250" class="site image"/></a></span>
+      <div class="site name over">urtil</div><a href="http://monsterkodi.github.io/urtil" class="site link"><img src="img/monsterkodi.github.io.urtil.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
+      <div class="site name over">password-turtle</div><a href="http://monsterkodi.github.io/password-turtle" class="site link"><img src="img/monsterkodi.github.io.password-turtle.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
+      <div class="site name over">knix</div><a href="http://monsterkodi.github.io/knix" class="site link"><img src="img/monsterkodi.github.io.knix.png" width="250" height="250" class="site image"/></a></span>
     <div class="break"></div><span class="site tile">
-      <div class="site name">strudl</div><a href="http://www.npmjs.com/package/strudl" class="site link"><img src="img/www.npmjs.com.package.strudl.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
-      <div class="site name">sds</div><a href="http://www.npmjs.com/package/sds" class="site link"><img src="img/www.npmjs.com.package.sds.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
-      <div class="site name">noon</div><a href="http://www.npmjs.com/package/noon" class="site link"><img src="img/www.npmjs.com.package.noon.png" width="250" height="250" class="site image"/></a></span>
+      <div class="site name over">strudl</div><a href="http://www.npmjs.com/package/strudl" class="site link"><img src="img/www.npmjs.com.package.strudl.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
+      <div class="site name over">sds</div><a href="http://www.npmjs.com/package/sds" class="site link"><img src="img/www.npmjs.com.package.sds.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
+      <div class="site name over">noon</div><a href="http://www.npmjs.com/package/noon" class="site link"><img src="img/www.npmjs.com.package.noon.png" width="250" height="250" class="site image"/></a></span>
     <div class="break"></div><span class="site tile">
-      <div class="site name">color-ls</div><a href="http://www.npmjs.com/package/color-ls" class="site link"><img src="img/www.npmjs.com.package.color-ls.png" width="250" height="250" class="site image"/></a></span>
+      <div class="site name over">color-ls</div><a href="http://www.npmjs.com/package/color-ls" class="site link"><img src="img/www.npmjs.com.package.color-ls.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
+      <div class="site name over">colorcat</div><a href="http://www.npmjs.com/package/colorcat" class="site link"><img src="img/www.npmjs.com.package.colorcat.png" width="250" height="250" class="site image"/></a></span><span class="site tile">
+      <div class="site name over">konrad</div><a href="http://www.npmjs.com/package/konrad" class="site link"><img src="img/www.npmjs.com.package.konrad.png" width="250" height="250" class="site image"/></a></span>
     <div class="break"></div>
   </div>
 </body>
