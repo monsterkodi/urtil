@@ -30,38 +30,45 @@ html
                 
             img(src="./img/tiles.png" width="600")
                 
-            h2 example configs
+            h2 example config
             p.
-                Some notes on the <a href="https://github.com/monsterkodi/urtil/tree/gh-pages/examples">config files</a> from the <a href='examples/example.html'>main example</a>:
+                Some notes on the <a href="https://github.com/monsterkodi/urtil/blob/gh-pages/examples/example">config file</a> from the <a href='examples/example.html'>main example</a>:
                 
             h4 
                 a(href="https://github.com/monsterkodi/urtil/blob/gh-pages/examples/example") example
             pre.
-                config
-                    tileSize    300
-                tiles
-                useless
-                    break
-                monsterkodi
-                    break
+                @                      . ts 300 . fg #fff . bg #555 
+                tiles                  . html   . refresh
+                    @                  . tw 300 . th 210  . bg #7fc4d2
+                    github.com         . -
+                    atom.io             
+                    electron.atom.io   . -
+                    nodejs.org          
+                    npmjs.com          . -
+                    gulpjs.com           
+                    gruntjs.com        . -
+            
             p.        
-                The first two lines tell urtil to make 300 pixel square tiles.
+                The first line is the main page setup: 300 pixel square tiles with custom page and title colors.
             p.
-                If a top level entry contains no dot, urtil assumes it is a local html file.
+                The second line creates a local html file with the title *tiles*.
             p.
-                The <b>break</b> keyword centers the preceeding tiles and lets the next tile begin on a new line.
+                The *tiles* page has tiles of size 300x210 and a custom background color.
+            p.
+                <b>. -</b> means: centers the preceeding tiles and let the next tile begin on a new line.
                 
             h4 
                 a(href="https://github.com/monsterkodi/urtil/blob/gh-pages/examples/example") useless
             pre.
-                heeeeeeeey.com                                    
-                thatsthefinger.com                                
-                eelslap.com                                       
-                www.staggeringbeauty.com                          
-                www.republiquedesmangues.fr                       
-                www.movenowthinklater.com                         
-                www.koalastothemax.com                            
-                grandpanoclothes.com                              
+                useless
+                    heeeeeeeey.com                                    
+                    thatsthefinger.com                                
+                    eelslap.com                                       
+                    www.staggeringbeauty.com                          
+                    www.republiquedesmangues.fr                       
+                    www.movenowthinklater.com                         
+                    www.koalastothemax.com                            
+                    grandpanoclothes.com                              
                 ...
             p.
                 This list contains a subset of the links from Tim Holmans 
@@ -72,24 +79,34 @@ html
             h4 
                 a(href="https://github.com/monsterkodi/urtil/blob/gh-pages/examples/example") monsterkodi
             pre.                
-                config
-                    tileSize      300
-                monsterkodi.net
-                    image         ../monsterkodi.net.png
-                monsterkodi.github.io
-                    break
-                    
-                github.com/monsterkodi
-                npmjs.com/~monsterkodi
-                    break
-                    
-                projects
-                    screenHeight  960
-                    refresh
-                    break
+                monsterkodi                 . html . - . refresh . title off
+                    @                       . bg #444 . fg #fff . ts 300 
+                    monsterkodi.net         . image ../monsterkodi.net.png
+                    monsterkodi.github.io
+                                            -
+                    github.com/monsterkodi
+                    npmjs.com/~monsterkodi                      
+                                            -
+                    projects                . html . - . sh 960 . !
+                        @                   . bg #333 . fg white . ts 250
+
+                        monsterkodi.github.io/urtil             
+                        monsterkodi.github.io/password-turtle
+                        monsterkodi.github.io/knix
+                                            -
+                        www.npmjs.com/package/strudl
+                        www.npmjs.com/package/sds
+                        www.npmjs.com/package/noon
+                                            -
+                        www.npmjs.com/package/color-ls
+                        www.npmjs.com/package/colorcat
+                        www.npmjs.com/package/konrad
+                                            -
                 
             p.
-                The <b>image</b> keyword (4th line) can be used to provide an image in case the website doesn't render with the underlying <a href=https://www.npmjs.com/package/webshot>webshot</a>.
+                The <b>image</b> keyword (3rd line) can be used to provide an image in case the website doesn't render with the underlying <a href=https://www.npmjs.com/package/webshot>webshot</a>.
+            p. 
+                Titles are shown by default on hover. <b>title off</b> turns them off completely. <b>title on</b> would show them always.
             p.
                 If urtil has created a thumbnail image for a webpage in previous runs, it doesn't regenerate it by default.
                 The <b>refresh</b> keyword forces it to regenerate the thumbnail on every run.

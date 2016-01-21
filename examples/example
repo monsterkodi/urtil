@@ -41,18 +41,18 @@ useless
     oct82.com                                         
     semanticresponsiveillustration.com              
                                                 -
-monsterkodi                                     . html . - . refresh . config .. bg #444 .. fg  #fff .. ts  300
+monsterkodi                                     . html . - . refresh . config .. bg #444 .. fg  #fff .. ts  300 . title off
     monsterkodi.net
                                                 image   ../monsterkodi.net.png
     monsterkodi.github.io
                                                 -
     github.com/monsterkodi
-    npmjs.com/~monsterkodi
+    npmjs.com/~monsterkodi                      
                                                 -
     projects                                    . html . - . sh  960 . !
         @                                       . bg #333 . fg  white . ts 250
 
-        monsterkodi.github.io/urtil
+        monsterkodi.github.io/urtil             
         monsterkodi.github.io/password-turtle
         monsterkodi.github.io/knix
                                                 -
@@ -61,4 +61,6 @@ monsterkodi                                     . html . - . refresh . config ..
         www.npmjs.com/package/noon
                                                 -
         www.npmjs.com/package/color-ls
+        www.npmjs.com/package/colorcat
+        www.npmjs.com/package/konrad
                                                 -
