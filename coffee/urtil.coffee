@@ -234,7 +234,6 @@ buildPage = ->
         title = _.last u.split '/'
         title = i.value if _.isString i.value
         titleClass = args.title ? 'over'
-        console.log u, titleClass
         t += _.template(tile)
             href:       i.href
             img:        path.join 'img', i.img

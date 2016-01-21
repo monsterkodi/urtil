@@ -305,7 +305,6 @@
         title = i.value;
       }
       titleClass = (ref2 = args.title) != null ? ref2 : 'over';
-      console.log(u, titleClass);
       t += _.template(tile)({
         href: i.href,
         img: path.join('img', i.img),
