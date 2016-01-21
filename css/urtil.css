@@ -32,7 +32,8 @@ a:hover {
 a:focus img {
   border: 1px solid #808080;
 }
-p b {
+p b,
+li b {
   color: #fa0;
 }
 img {
