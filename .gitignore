@@ -3,3 +3,4 @@ Icon?
 *.log
 examples/img/.*
 package.json
+node_modules
