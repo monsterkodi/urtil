@@ -9,7 +9,6 @@
 fs       = require 'fs'
 url      = require 'url'
 rm       = require 'del'
-sds      = require 'sds'
 open     = require 'opn'
 jade     = require 'jade'
 noon     = require 'noon'
@@ -83,7 +82,7 @@ name   = path.basename args.name, path.extname args.name
 sites  = resolve "#{indir}/#{args.name}"
 
 if not fs.existsSync(sites) or fs.statSync(sites).isDirectory()
-    for ext in sds.extensions
+    for ext in noon.extensions
         sites = resolve "#{indir}/#{name}.#{ext}"
         if fs.existsSync sites
             break
@@ -91,7 +90,7 @@ if not fs.existsSync(sites) or fs.statSync(sites).isDirectory()
 sites = "#{indir}/#{name}.crypt" if not fs.existsSync sites
 if not fs.existsSync sites then err "config file with name #{name.yellow} not found in #{indir.yellow}!"
 
-urls = sds.load sites
+urls = noon.load sites
 
 has = (ol, kv) -> 
     return false if not ol?
@@ -333,7 +332,7 @@ load = (u, cb, v) ->
             delete uc['tileWidth']
             delete uc['tileHeight']
             delete uc['screenHeight']
-            sds.save "#{u}.noon", uc
+            noon.save "#{u}.noon", uc
             cmd = "#{process.argv[0]} #{process.argv[1]} -O -U ./#{name}.html #{u}.noon"
             if args.verbose   then cmd += " -v"
             if args.quiet   then cmd += " -q"

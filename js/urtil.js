@@ -8,7 +8,7 @@
  */
 
 (function() {
-  var _, args, buildPage, childp, coff, coffee, colors, css, defaultScreenHeight, defaultTileHeight, defaultTileWidth, del, err, ext, fs, has, html, img, indir, j, jade, k, l, len, len1, load, log, m, map, mkpath, name, noon, numLoaded, onLoaded, onTimeout, open, outdir, path, process, ref, ref1, resolve, rm, script, sds, set, sites, status, styl, stylus, swapAlias, tile, tiles, u, url, urls, v, webshot,
+  var _, args, buildPage, childp, coff, coffee, colors, css, defaultScreenHeight, defaultTileHeight, defaultTileWidth, del, err, ext, fs, has, html, img, indir, j, jade, k, l, len, len1, load, log, m, map, mkpath, name, noon, numLoaded, onLoaded, onTimeout, open, outdir, path, process, ref, ref1, resolve, rm, script, set, sites, status, styl, stylus, swapAlias, tile, tiles, u, url, urls, v, webshot,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   fs = require('fs');
@@ -16,8 +16,6 @@
   url = require('url');
 
   rm = require('del');
-
-  sds = require('sds');
 
   open = require('opn');
 
@@ -93,7 +91,7 @@
   sites = resolve(indir + "/" + args.name);
 
   if (!fs.existsSync(sites) || fs.statSync(sites).isDirectory()) {
-    ref = sds.extensions;
+    ref = noon.extensions;
     for (j = 0, len = ref.length; j < len; j++) {
       ext = ref[j];
       sites = resolve(indir + "/" + name + "." + ext);
@@ -111,7 +109,7 @@
     err("config file with name " + name.yellow + " not found in " + indir.yellow + "!");
   }
 
-  urls = sds.load(sites);
+  urls = noon.load(sites);
 
   has = function(ol, kv) {
     if (ol == null) {
@@ -413,7 +411,7 @@
         delete uc['tileWidth'];
         delete uc['tileHeight'];
         delete uc['screenHeight'];
-        sds.save(u + ".noon", uc);
+        noon.save(u + ".noon", uc);
         cmd = process.argv[0] + " " + process.argv[1] + " -O -U ./" + name + ".html " + u + ".noon";
         if (args.verbose) {
           cmd += " -v";

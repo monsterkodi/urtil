@@ -3,7 +3,7 @@ description   makes url tiles
 repository
               type  git
               url   git://github.com/monsterkodi/urtil
-version       0.4.7
+version       0.5.0
 main          index.js
 author        monsterkodi
 license       Unlicense
@@ -25,12 +25,11 @@ dependencies
               colors          ^1.1.2
               del             ^2.2.0
               jade            ^1.11.0
-              karg            >=0.1.31
-              lodash          ^4.0.0
+              karg            >=0.3.1
+              lodash          ^4.1.0
               mkpath          ^1.0.0
-              noon            >=0.7.4
+              noon            >=0.9.11
               opn             ^4.0.0
               progress2       ^0.1.1
-              sds             >=1.4.23
               stylus          ^0.53.0
               webshot         ^0.17.0
