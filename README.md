@@ -1,4 +1,6 @@
+
 # urtil
+
 ### makes url tiles
 
 ```sh
@@ -19,4 +21,4 @@ A slightly more complex example:
 
 You can see the example in action [here](http://monsterkodi.github.io/urtil/examples/example.html).
 
-[urtil](http://monsterkodi.github.io/urtil/index.html) comes with some rudimentary [documentation](http://monsterkodi.github.io/urtil/about.html).
+[urtil](http://monsterkodi.github.io/urtil/index.html) has some rudimentary [documentation](http://monsterkodi.github.io/urtil/about.html).
