@@ -28,7 +28,7 @@ dependencies
               karg            >=0.3.2
               lodash          ^4.1.0
               mkpath          ^1.0.0
-              noon            >=0.9.14
+              noon            >=0.9.16
               opn             ^4.0.0
               progress2       ^0.1.1
               stylus          ^0.53.0
