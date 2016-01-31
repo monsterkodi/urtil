@@ -293,7 +293,7 @@
    */
 
   buildPage = function() {
-    var breakLast, h, i, n, r, ref2, t, title, titleClass, u;
+    var breakLast, h, i, n, r, ref2, ref3, t, title, titleClass, u;
     t = tiles;
     breakLast = false;
     for (u in map) {
@@ -302,7 +302,10 @@
       if (_.isString(i.value)) {
         title = i.value;
       }
-      titleClass = (ref2 = args.title) != null ? ref2 : 'over';
+      if (((ref2 = i.value) != null ? ref2.title : void 0) != null) {
+        title = i.value.title;
+      }
+      titleClass = (ref3 = args.title) != null ? ref3 : 'over';
       t += _.template(tile)({
         href: i.href,
         img: path.join('img', i.img),

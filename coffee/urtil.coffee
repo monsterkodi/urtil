@@ -232,6 +232,7 @@ buildPage = ->
         # log u, i.value
         title = _.last u.split '/'
         title = i.value if _.isString i.value
+        title = i.value.title if i.value?.title?
         titleClass = args.title ? 'over'
         t += _.template(tile)
             href:       i.href
@@ -334,7 +335,7 @@ load = (u, cb, v) ->
             delete uc['screenHeight']
             noon.save "#{u}.noon", uc
             cmd = "#{process.argv[0]} #{process.argv[1]} -O -U ./#{name}.html #{u}.noon"
-            if args.verbose   then cmd += " -v"
+            if args.verbose then cmd += " -v"
             if args.quiet   then cmd += " -q"
             if args.refresh then cmd += " -r"
             childp.execSync cmd,
