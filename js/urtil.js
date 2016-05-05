@@ -354,14 +354,14 @@
     local = u.indexOf('.') === -1;
     if (local) {
       us = "file://" + (resolve(path.join(outdir, u + '.html')));
-    } else if (!u.startsWith('http')) {
+    } else if ((!u.startsWith('http')) && (!u.startsWith('file'))) {
       us = "http://" + u;
     } else {
       us = u;
     }
     r = url.parse(us);
     map[u] = {
-      href: local && ("./" + u + ".html") || r.href
+      href: local && ("./" + u + ".html") || us
     };
     if (local) {
       map[u].local = true;

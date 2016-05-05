@@ -273,14 +273,14 @@ load = (u, cb, v) ->
     local = u.indexOf('.') == -1
     if local
         us = "file://#{resolve path.join outdir, u + '.html'}" 
-    else if not u.startsWith 'http'
+    else if (not u.startsWith 'http') and (not u.startsWith 'file')
         us = "http://#{u}" 
     else 
         us = u
      
     r = url.parse us
 
-    map[u] = href: (local and "./#{u}.html" or r.href)
+    map[u] = href: (local and "./#{u}.html" or us)
     map[u].local = true if local
     map[u].value = v
     map[u]
