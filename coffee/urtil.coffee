@@ -171,12 +171,12 @@ load = (f) ->
         err "can't read file", f.yellow, e.magenta
         process.exit -1
 
-tiles  = load path.join __dirname, '../jade/tiles.jade'
-tile   = load path.join __dirname, '../jade/tile.jade'
-styl   = load path.join __dirname, '../jade/tiles.styl'
+tiles  = load path.join __dirname, '../pug/tiles.pug'
+tile   = load path.join __dirname, '../pug/tile.pug'
+styl   = load path.join __dirname, '../pug/tiles.styl'
 styl   = _.template(styl) args
 css    = stylus.render styl
-coff   = load path.join __dirname, '../jade/tiles.coffee'
+coff   = load path.join __dirname, '../pug/tiles.coffee'
 coff   = _.template(coff) args
 script = coffee.compile coff
     

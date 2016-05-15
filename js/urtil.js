@@ -221,17 +221,17 @@
     }
   };
 
-  tiles = load(path.join(__dirname, '../jade/tiles.jade'));
+  tiles = load(path.join(__dirname, '../pug/tiles.pug'));
 
-  tile = load(path.join(__dirname, '../jade/tile.jade'));
+  tile = load(path.join(__dirname, '../pug/tile.pug'));
 
-  styl = load(path.join(__dirname, '../jade/tiles.styl'));
+  styl = load(path.join(__dirname, '../pug/tiles.styl'));
 
   styl = _.template(styl)(args);
 
   css = stylus.render(styl);
 
-  coff = load(path.join(__dirname, '../jade/tiles.coffee'));
+  coff = load(path.join(__dirname, '../pug/tiles.coffee'));
 
   coff = _.template(coff)(args);
 
