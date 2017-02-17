@@ -24,7 +24,6 @@ onMouseOut = (event) ->
         name = tile?.getElementsByClassName('name')[0]
         outStyle = "none"
         outStyle = "unset" if "on" in name.classList
-        console.log name.classList
         name?.style.display = outStyle
 
 tiles = -> [].slice.call document.body.getElementsByClassName('site tile')

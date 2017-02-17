@@ -8,7 +8,7 @@ main          index.js
 author        monsterkodi
 license       Unlicense
 bin
-              urtil   ./bin/urtil
+              urtil  ./bin/urtil
 preferGlobal  true
 keywords
               web
@@ -21,15 +21,15 @@ keywords
               tool
               cli
 dependencies
-              coffee-script   ^1.10.0
+              coffee-script   ^1.12.3
               colors          ^1.1.2
-              del             ^2.2.0
+              del             ^2.2.2
               jade            ^1.11.0
-              karg            >=0.3.2
-              lodash          ^4.1.0
+              karg            >=1.0.9
+              lodash          ^4.17.4
               mkpath          ^1.0.0
-              noon            >=0.9.16
-              opn             ^4.0.0
+              noon            >=1.0.13
+              opn             ^4.0.2
               progress2       ^0.1.1
-              stylus          ^0.53.0
-              webshot         ^0.17.0
+              stylus          ^0.54.5
+              webshot         ^0.18.0
